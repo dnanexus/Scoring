@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 
@@ -79,13 +79,10 @@ def main(run_name, sample_archive, control_archive, rep_stats_file, spp_stats_fi
 		out.write('\n')
 				
 	out.close()
-	
-	
-	
+
 if __name__ == '__main__':
 	if not len(sys.argv) == 8:
 		print "Usage: build_report_text.py <run_name> <sample_archive> <control_archive> <rep_stats_file> <spp_stats_file> <idr_stats_file> <output_file>"
 		raise SystemExit(1)
 		
 	main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5], sys.argv[6], sys.argv[7])
-	
