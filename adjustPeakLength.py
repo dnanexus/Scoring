@@ -1,15 +1,15 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# This code does not seem to be used in the pipeline.
 
 '''Adjusts large peaks (>2000 bp) to be no greater than 2000 bp in length.
 Used to fix MACS calling of large broad peaks which causes issues in IDR.
 
 also Anshul's crazy adjustments.
-
 '''
 
 import sys
 import subprocess
-
 
 def main(narrowpeak_input, narrowpeak_output):
 #	narrowpeak_input_sorted = narrowpeak_input + '.sorted'
@@ -37,10 +37,9 @@ def main(narrowpeak_input, narrowpeak_output):
 		
 	np_in.close()
 	np_out.close()
-	
+
 if __name__ == '__main__':
 	if not len(sys.argv) == 3:
 		print "Usage:  adjustPeakLength.py <narrowPeak input> <narrowPeak output>"
 		raise SystemExit(1)
 	main(sys.argv[1], sys.argv[2])
-	
