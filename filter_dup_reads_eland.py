@@ -1,7 +1,12 @@
-#!/bin/env python
+#!/usr/bin/env python
 
-### NOTE:  Assuming read file has already been filtered for only uniquely
-## mappable reads.
+# Filters an ELAND mappings file, keeping only a single mapping to each
+# genomic position. Among the mappings to a given position, the one
+# appearing first in the file is kept. As a side effect, the PBC is
+# computed (as in calc_pbc.py).
+
+# This code assumes the mappings file has already been filtered for only
+# uniquely mappable reads.
 
 import sys
 
@@ -39,13 +44,12 @@ def main(read_file, filtered_eland, output_file=None):
 		of = open(output_file, 'a')
 		of.write('\t'.join([read_file.split('/')[-1], str(m_1), str(m_distinct), str(float(m_1) / float(m_distinct)),]) + '\n')
 		of.close()
-	
+
 if __name__ == '__main__':
 	if len(sys.argv) == 3:
 		main(sys.argv[1], sys.argv[2])
 	if len(sys.argv) == 4:
 		main(sys.argv[1], sys.argv[2], sys.argv[3])
 	else:
-		print "Usage:  filter_dup_reads_eland.py <ELAND file> <Filtered ELAND file> [stats_output_file]"
+		print "Usage: filter_dup_reads_eland.py <ELAND file> <Filtered ELAND file> [stats_output_file]"
 		raise SystemExit(1)
-	
