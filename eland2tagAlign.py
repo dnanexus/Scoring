@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 
@@ -6,7 +6,7 @@ import chr_maps
 
 def main(eland_file, ta_file, genome):
 	if genome not in chr_maps.genomes:
-		print "Genome %s not found.  Valid genomes are %s" % (genome, ','.join(chr_maps.genomes.keys()))
+		print "Genome %s not found. Valid genomes are %s" % (genome, ','.join(chr_maps.genomes.keys()))
 		raise Exception
 	eland = open(eland_file, 'r')
 	ta = open(ta_file, 'w')
@@ -34,9 +34,9 @@ def main(eland_file, ta_file, genome):
 			
 		ta_fields = [chr, str(start), str(stop), seq, str(score), strand,]
 		ta.write('\t'.join(ta_fields) + '\n')
-		
+
 if __name__ == '__main__':
 	if not len(sys.argv) == 4:
-		print "Usage:  eland2tagAlign.py [eland file] [output file] [genome]"
+		print "Usage: eland2tagAlign.py [eland file] [output file] [genome]"
 		raise SystemExit(1)
 	main(sys.argv[1], sys.argv[2], sys.argv[3])
