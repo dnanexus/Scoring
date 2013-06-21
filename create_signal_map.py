@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import os
 import sys
@@ -40,10 +40,10 @@ def create_sgr(output_dir, eland_file_path, chr):
 		output.write(str(s) + "\n")
 	eland.close()
 	output.close()
-	
+
 if __name__ == "__main__":
 	if len(sys.argv) < 3:
-		print "Usage:  create_signal_map.py output_dir input_dir"
+		print "Usage: create_signal_map.py output_dir input_dir"
 		raise SystemExit(1)
 	output_dir = sys.argv[1]
 	if not os.path.isdir(output_dir):
