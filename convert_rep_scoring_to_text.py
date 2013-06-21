@@ -1,4 +1,6 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# This script does not seem to be used in the pipeline.
 
 import re
 import sys
@@ -15,14 +17,12 @@ class ReplicateStats:
 		if attr_name in self.attributes:
 			raise Exception("%s already an attribute for %s" % (attr_name, self.name))
 		self.attributes[attr_name] = attr_value
-		
-		
+
 class ReplicateByReplicateStats(ReplicateStats):
 	def __init__(self, rep1_name, rep2_name):
 		self.rep1_name = rep1_name
 		self.rep2_name = rep2_name
 		self.attributes = {}
-	
 
 class ReplicateParser:
 	def __init__(self):
@@ -57,7 +57,7 @@ class ReplicateParser:
 				continue
 			current.add_attribute(attr_name, attr_value)
 		return replicates
-		
+
 def convert_to_text(replicates, output):
 	for rep in replicates:
 		output.write("Replicate %s\n" % rep.name)
@@ -67,10 +67,10 @@ def convert_to_text(replicates, output):
 			output.write("\t%s vs. %s\n" % (rr.rep1_name, rr.rep2_name))
 			for attr_name in rr.attributes:
 				output.write("\t\t%s = %s\n" % (attr_name, rr.attributes[attr_name]))
-				
+
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
-		print "Usage:  convert_rep_scoring_to_text.py replicate_info output_file"
+		print "Usage: convert_rep_scoring_to_text.py replicate_info output_file"
 		raise SystemExit(1)
 	input = open(sys.argv[1])
 	output = open(sys.argv[2], 'w')
