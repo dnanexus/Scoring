@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 import os
@@ -7,11 +7,13 @@ import bz2
 
 import sjm
 
+# This code does not seem to be used in the pipeline.
+
 TMP_DIR = '/srv/gs1/projects/scg/Scoring/tmp/remaps'
 
 if __name__ == '__main__':
 	if len(sys.argv) < 4:
-		print "Usage:  remap_pipeline.py <fastqs_file> <genome_dir> <output_dir>"
+		print "Usage: remap_pipeline.py <fastqs_file> <genome_dir> <output_dir>"
 		raise SystemExit(0)
 		
 	if not os.path.isdir(sys.argv[3]):
@@ -44,7 +46,7 @@ if __name__ == '__main__':
 			fastq_fn = os.path.join(TMP_DIR, flowcell_name + '.fastq')
 			cmds.append('/home/pcayting/submission/export2fastq %s %s' % (fn, fastq_fn))
 			fasta_fn = os.path.join(TMP_DIR, flowcell_name + '.fa')
-			cmds.append('cat %s | /srv/gs1/projects/scg/Scoring/fastx_toolkit/bin/fastq_to_fasta  > %s' %(fastq_fn, fasta_fn))
+			cmds.append('cat %s | /srv/gs1/projects/scg/Scoring/fastx_toolkit/bin/fastq_to_fasta > %s' %(fastq_fn, fasta_fn))
 		else:
 			raise Exception("Can't figure out file type for %s" % fn)
 			
