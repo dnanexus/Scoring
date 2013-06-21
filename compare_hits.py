@@ -1,4 +1,6 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# This script does not seem to be used in the pipeline.
 
 """
 compare_hits.py
@@ -6,24 +8,24 @@ compare_hits.py
 Compares multiple hit lists against each other to determine whether they agree.
 Frequently used for biological replicate scoring.
 
-Usage:  compare_hits.py [-c combined_hits_file] -o <output_result_file> -q 
-<q-value> -i <filtered_hits_file1> -i <filtered_hits_file2> 
+Usage:  compare_hits.py [-c combined_hits_file] -o <output_result_file> -q
+<q-value> -i <filtered_hits_file1> -i <filtered_hits_file2>
 [-i <filtered_hits_file3> ...]
 
 Arguments:
 	-c, --combined
 	Calculates simple statistics on file containing the hits from the merged
 	replicates
-	
+
 	-o, --output
 	Output filename for the result statistics
-	
+
 	-q, --qvalue
 	Q-value used as a cutoff for these hits
-	
+
 	-i, --input
 	Filtered hit files (modified BED format) to compare against
-	
+
 """
 
 import getopt
@@ -82,7 +84,7 @@ class Replicate:
 		for r in self.rep_vs_reps:
 			output_str += r.output()
 		return output_str
-		
+
 class ReplicateByReplicate:
 	
 	def __init__(self, rep1, rep2, mapped_reads_ratio, hits_ratio, percent_overlap):
@@ -98,13 +100,13 @@ class ReplicateByReplicate:
 		output_str += 'hits_ratio=%f\n' % self.hits_ratio
 		output_str += 'percent_overlap=%f\n' % self.percent_overlap
 		return output_str
-		
-		
+
+
 def ratio(x, y):
 	if y == 0:
 		return 0
 	return float(x) / float(y)
-	
+
 def overlaps(hit1, hit2):
 	if not hit1.chr == hit2.chr:
 		return False
@@ -114,7 +116,7 @@ def overlaps(hit1, hit2):
 		return False
 	else:
 		return True
-	
+
 def calculate_overlap(hits1, hits2, percent_of_hits):
 	"""Calculates the percentage of hits which overlap.
 	
@@ -136,13 +138,13 @@ def calculate_overlap(hits1, hits2, percent_of_hits):
 				total_overlap += 1
 				break
 	return float(total_overlap) / float(total_checked)
-				
+
 def replicate_stats(rep1, rep2):
 	mapped_reads_ratio = ratio(rep1.num_of_reads(), rep2.num_of_reads())
 	hits_ratio = ratio(len(rep1.hits), len(rep2.hits))
 	percent_overlap = calculate_overlap(rep1.hits, rep2.hits, TOP_OVERLAP_HITS)
 	return ReplicateByReplicate(rep1, rep2, mapped_reads_ratio, hits_ratio, percent_overlap)
-	
+
 def common_thresholds(threshold_lists):
 	common = threshold_lists[0]
 	for tl in threshold_lists[1:]:
@@ -150,7 +152,7 @@ def common_thresholds(threshold_lists):
 			if threshold not in tl:
 				common.remove(threshold)
 	return common
-		
+
 def build_report(replicates, output_file):
 	f = open(output_file, 'w')
 	for r1 in replicates:
