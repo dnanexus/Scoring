@@ -1,4 +1,6 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# This code does not seem to be used in the pipeline.
 
 '''Determines read length of FASTA file in order to call correct eland'''
 
@@ -22,7 +24,7 @@ def read_length(filename):
 
 if __name__ == '__main__':
 	if not len(sys.argv) == 4:
-		print "Usage:  eland_wrapper.py <reads_fasta> <genome_dir> <output_file>"
+		print "Usage: eland_wrapper.py <reads_fasta> <genome_dir> <output_file>"
 		raise SystemExit(1)
 	
 	reads_fn = sys.argv[1]
@@ -32,4 +34,3 @@ if __name__ == '__main__':
 	eland_bin = os.path.join(ELAND_BIN_DIR, 'eland_%i' % read_length(reads_fn))
 	
 	subprocess.call("%s %s %s %s --multi=10" % (eland_bin, reads_fn, genome_dir, output_fn), shell=True)
-	
