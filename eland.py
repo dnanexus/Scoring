@@ -7,7 +7,6 @@ import traceback
 eland_match_re = re.compile(r'^([\w\.]+):(\d+)([FR])(\w+)$')  # Eland Match Description
 eland_match_no_chr_re = re.compile(r'^(\d+)([FR])(\w+)$') # Eland Match Description without the leading chr name
 
-
 class ElandMatch:
 	def __init__(self, chr_name, coordinate, strand, match_code):
 		self.chr_name = chr_name
@@ -24,10 +23,8 @@ class ElandMatch:
 			return 2
 		else:
 			raise Exception("Invalid match code %s" % self.match_code)
-			
 
 class ElandExtendedMatch(ElandMatch):
-
 	def __init__(self, chr_name, coordinate, strand, match_description):
 		self.chr_name = chr_name
 		self.coordinate = coordinate
@@ -46,19 +43,14 @@ class ElandExtendedMatch(ElandMatch):
 	
 	def __str__(self):
 		return '%s:%s%s%s' % (self.chr_name, self.coordinate, self.strand, self.match_description)
-		
-		
-class ElandMultiMatch(ElandExtendedMatch):
 
+class ElandMultiMatch(ElandExtendedMatch):
 	def number_of_mismatches(self):
 		return int(self.match_description)
-		
 
 class ElandHit:
-
 	def __init__(self, read_name, sequence, match_code, num_exact, num_1_error,
-					num_2_error, chr_name='', coordinate='', strand='', 
-					n_interpretation='DD'):
+                     num_2_error, chr_name='', coordinate='', strand='', n_interpretation='DD'):
 		max_length = 32
 		self.read_name = read_name
 		self.sequence = sequence
@@ -86,64 +78,54 @@ class ElandHit:
 		return self
 		
 	def __str__(self):
-		return '\t'.join([self.read_name, self.sequence, self.match_code, 
-							str(self.num_exact), str(self.num_1_error),
-							str(self.num_2_error), self.chr_name,
-							str(self.coordinate), self.strand, 
-							self.n_interpretation])
-							
-class ElandHitParser:
+		return '\t'.join([self.read_name, self.sequence, self.match_code,
+                                  str(self.num_exact), str(self.num_1_error),
+                                  str(self.num_2_error), self.chr_name,
+                                  str(self.coordinate), self.strand,
+                                  self.n_interpretation])
 
+class ElandHitParser:
 	def __init__(self):
 		pass
 	
 	def parse(self, line):
 		fields = line.rstrip('\n').split('\t')
 		if len(fields) > 6:
-			return ElandHit(
-								read_name=fields[0],
-								sequence=fields[1],
-								match_code=fields[2],
-								num_exact=int(fields[3]),
-								num_1_error=int(fields[4]),
-								num_2_error=int(fields[5]),
-								chr_name=fields[6],
-								coordinate=fields[7],
-								strand=fields[8],
-								n_interpretation=fields[9]
-							)
+			return ElandHit(read_name=fields[0],
+                                        sequence=fields[1],
+                                        match_code=fields[2],
+                                        num_exact=int(fields[3]),
+                                        num_1_error=int(fields[4]),
+                                        num_2_error=int(fields[5]),
+                                        chr_name=fields[6],
+                                        coordinate=fields[7],
+                                        strand=fields[8],
+                                        n_interpretation=fields[9])
 		elif len(fields) > 3:
-			return ElandHit(
-								read_name=fields[0],
-								sequence=fields[1],
-								match_code=fields[2],
-								num_exact=int(fields[3]),
-								num_1_error=int(fields[4]),
-								num_2_error=int(fields[5]),
-							)
+			return ElandHit(read_name=fields[0],
+                                        sequence=fields[1],
+                                        match_code=fields[2],
+                                        num_exact=int(fields[3]),
+                                        num_1_error=int(fields[4]),
+                                        num_2_error=int(fields[5]),)
 		else:
-			return ElandHit(
-								read_name=fields[0],
-								sequence=fields[1],
-								match_code=fields[2],
-								num_exact=0,
-								num_1_error=0,
-								num_2_error=0,
-							)
-						
+			return ElandHit(read_name=fields[0],
+                                        sequence=fields[1],
+                                        match_code=fields[2],
+                                        num_exact=0,
+                                        num_1_error=0,
+                                        num_2_error=0,)
+
 class ElandExtendedParser:
-	
 	def __init__(self):
 		pass
 		
 	def parse(self, line):
 		fields = line.rstrip('\n').split('\t')
-		return ElandExtendedLine(
-									read_name=fields[0],
-									sequence=fields[1],
-									initial_matches=fields[2],
-									matches=self.form_matches(fields[3]),
-								)
+		return ElandExtendedLine(read_name=fields[0],
+                                         sequence=fields[1],
+                                         initial_matches=fields[2],
+                                         matches=self.form_matches(fields[3]),)
 								
 	def form_matches(self, line):
 		matches = []
@@ -165,10 +147,8 @@ class ElandExtendedParser:
 					raise Exception("Eland match description invalid.\n%s" % line)
 				matches.append(ElandExtendedMatch(last_chr, m.group(1), m.group(2), m.group(3)))
 		return matches
-		
 
 class ElandMultiParser(ElandExtendedParser):
-
 	def __init__(self):
 		pass
 		
@@ -178,17 +158,12 @@ class ElandMultiParser(ElandExtendedParser):
 			matches = []
 		else:
 			matches = self.form_matches(fields[3])
-		return ElandMultiLine(
-								read_name=fields[0],
-								sequence=fields[1],
-								initial_matches=fields[2],
-								matches=matches,
-								)
-								
-								
+		return ElandMultiLine(read_name=fields[0],
+                                      sequence=fields[1],
+                                      initial_matches=fields[2],
+                                      matches=matches,)
 
 class ElandExtendedLine:
-
 	def __init__(self, read_name, sequence, initial_matches, matches):
 		self.read_name = read_name
 		self.sequence = sequence
@@ -199,12 +174,10 @@ class ElandExtendedLine:
 		s = '\t'.join([self.read_name, self.sequence, self.initial_matches])
 		s += '\t'
 		s += ','.join([str(m) for m in self.matches])
-		
-		
+
 	def best_matches(self):
 		'''Returns list of matches with the lowest number of mismatches'''
-		
-		match_list = []
+                match_list = []
 		best_mismatch = 999
 		for m in self.matches:
 			if m.number_of_mismatches() < best_mismatch:
@@ -217,9 +190,7 @@ class ElandExtendedLine:
 		return match_list
 		
 	def convert_to_eland(self):
-		'''Returns a regular Eland Hit line.  Only works for unique best
-		matches'''
-		
+		'''Returns a regular Eland Hit line. Only works for unique best matches'''
 		if len(self.best_matches()) > 1:
 			raise Exception("Can only convert unique hits.")
 		elif len(self.best_matches()) == 0:
@@ -230,16 +201,13 @@ class ElandExtendedLine:
 		errors = [0, 0, 0]
 		errors[m.number_of_mismatches()] = 1
 		return ElandHit(self.read_name, self.sequence, m.match_code(),
-						errors[0], errors[1], errors[2], m.chr_name, 
-						m.coordinate, m.strand)
+                                errors[0], errors[1], errors[2], m.chr_name,
+                                m.coordinate, m.strand)
 
-						
 class ElandMultiLine(ElandExtendedLine):
 	pass
-	
-	
-class BwaSamLine:
 
+class BwaSamLine:
 	def __init__(self, qname, strand, chr, position, mapq, cigar, sequence, quality, edit_distance, mismatching_positions, num_best_hits, num_mismatches, alternative_hits=None):
 		self.qname = qname
 		self.strand = strand
@@ -285,18 +253,16 @@ class BwaSamLine:
 		elif self.strand == '-':
 			strand = 'R'
 		return ElandHit(self.qname, self.sequence, match_code, num_exact, num_1_error, num_2_error, self.chr + '.fa', self.position, strand)
-		
+
 class BwaAlternativeHit:
-	
 	def __init__(self, chr, strand, position, cigar, num_mismatches):
 		self.chr = chr
 		self.strand = strand
 		self.position = position
 		self.cigar = cigar
 		self.num_mismatches = num_mismatches
-		
-class BwaSamParser:
 
+class BwaSamParser:
 	def __init__(self):
 		pass
 		
@@ -313,21 +279,19 @@ class BwaSamParser:
 			strand = '+'
 		if flag & 0x0004 == 0x0004:
 			# No match
-			return BwaSamLine(
-							qname=fields[0],
-							strand=strand,
-							chr=fields[2],
-							position=int(fields[3]),
-							mapq=fields[4],
-							cigar=fields[5],
-							sequence=fields[9],
-							quality=fields[10],
-							edit_distance=0,
-							mismatching_positions=0,
-							num_best_hits=0,
-							num_mismatches=0,
-							alternative_hits=[]
-						)
+			return BwaSamLine(qname=fields[0],
+                                          strand=strand,
+                                          chr=fields[2],
+                                          position=int(fields[3]),
+                                          mapq=fields[4],
+                                          cigar=fields[5],
+                                          sequence=fields[9],
+                                          quality=fields[10],
+                                          edit_distance=0,
+                                          mismatching_positions=0,
+                                          num_best_hits=0,
+                                          num_mismatches=0,
+                                          alternative_hits=[])
 		
 		tags = {}
 		for unpacked_tag in fields[11:]:
@@ -350,23 +314,20 @@ class BwaSamParser:
 					hs[1] = int(hs[1])
 				alt_hits.append(BwaAlternativeHit(hs[0], strand, hs[1], hs[2], int(hs[3])))
 			
-		return BwaSamLine(
-							qname=fields[0],
-							strand=strand,
-							chr=fields[2],
-							position=int(fields[3]),
-							mapq=fields[4],
-							cigar=fields[5],
-							sequence=fields[9],
-							quality=fields[10],
-							edit_distance=tags['NM'],
-							mismatching_positions=tags['MD'],
-							num_best_hits=int(tags['X0']),
-							num_mismatches=int(tags['XM']),
-							alternative_hits=alt_hits
-						)
+		return BwaSamLine(qname=fields[0],
+                                  strand=strand,
+                                  chr=fields[2],
+                                  position=int(fields[3]),
+                                  mapq=fields[4],
+                                  cigar=fields[5],
+                                  sequence=fields[9],
+                                  quality=fields[10],
+                                  edit_distance=tags['NM'],
+                                  mismatching_positions=tags['MD'],
+                                  num_best_hits=int(tags['X0']),
+                                  num_mismatches=int(tags['XM']),
+                                  alternative_hits=alt_hits)
 
-							
 class BowtieSamParser:
 	def __init__(self):
 		pass
@@ -392,20 +353,18 @@ class BowtieSamParser:
 			num_hits = int(tags['XM'])
 		else:
 			num_hits = 1
-		return BowtieSamLine(
-							qname=fields[0],
-							strand=strand,
-							chr=fields[2],
-							position=int(fields[3]),
-							mapq=fields[4],
-							cigar=fields[5],
-							sequence=fields[9],
-							quality=fields[10],
-							edit_distance=int(tags['NM']),
-							mismatching_positions=tags['MD'],
-							num_hits=num_hits
-							)
-							
+		return BowtieSamLine(qname=fields[0],
+                                     strand=strand,
+                                     chr=fields[2],
+                                     position=int(fields[3]),
+                                     mapq=fields[4],
+                                     cigar=fields[5],
+                                     sequence=fields[9],
+                                     quality=fields[10],
+                                     edit_distance=int(tags['NM']),
+                                     mismatching_positions=tags['MD'],
+                                     num_hits=num_hits)
+
 class BowtieSamLine:
 	def __init__(self, qname, strand, chr, position, mapq, cigar, sequence, quality, edit_distance, mismatching_positions, num_hits):
 		self.qname = qname
@@ -440,8 +399,7 @@ class BowtieSamLine:
 		elif self.strand == '-':
 			strand = 'R'
 		return ElandHit(self.qname, self.sequence, match_code, num_exact, num_1_error, num_2_error, self.chr + '.fa', self.position, strand)
-		
-		
+
 class ElandSamParser:
 	def __init__(self):
 		pass
@@ -467,20 +425,18 @@ class ElandSamParser:
 			num_hits = int(tags['XA']) + 1
 		else:
 			num_hits = 1
-		return BowtieSamLine(
-							qname=fields[0],
-							strand=strand,
-							chr=fields[2],
-							position=int(fields[3]),
-							mapq=fields[4],
-							cigar=fields[5],
-							sequence=fields[9],
-							quality=fields[10],
-							edit_distance=int(tags['NM']),
-							mismatching_positions=tags['MD'],
-							num_hits=num_hits
-							)
-							
+		return BowtieSamLine(qname=fields[0],
+                                     strand=strand,
+                                     chr=fields[2],
+                                     position=int(fields[3]),
+                                     mapq=fields[4],
+                                     cigar=fields[5],
+                                     sequence=fields[9],
+                                     quality=fields[10],
+                                     edit_distance=int(tags['NM']),
+                                     mismatching_positions=tags['MD'],
+                                     num_hits=num_hits)
+
 class IlluminaSamParser:
 	def __init__(self):
 		pass
@@ -507,22 +463,19 @@ class IlluminaSamParser:
 		for c in tags['XD']:
 			if c in ['A','T','G','C']:
 				mismatching_positions += 1
-		return BowtieSamLine(
-							qname=fields[0],
-							strand=strand,
-							chr=fields[2],
-							position=int(fields[3]),
-							mapq=fields[4],
-							cigar=fields[5],
-							sequence=fields[9],
-							quality=fields[10],
-							edit_distance=0,
-							mismatching_positions=mismatching_positions,
-							num_hits=num_hits
-							)
+		return BowtieSamLine(qname=fields[0],
+                                     strand=strand,
+                                     chr=fields[2],
+                                     position=int(fields[3]),
+                                     mapq=fields[4],
+                                     cigar=fields[5],
+                                     sequence=fields[9],
+                                     quality=fields[10],
+                                     edit_distance=0,
+                                     mismatching_positions=mismatching_positions,
+                                     num_hits=num_hits)
 
 class ElandFile:
-	
 	def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
@@ -556,10 +509,8 @@ class ElandFile:
 		
 	def __iter__(self):
 		return self
-		
-							
+
 class ElandExtendedFile(ElandFile):
-	
 	def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
@@ -569,9 +520,8 @@ class ElandExtendedFile(ElandFile):
 			self.file = open(file_path, mode)
 		self.mode = mode
 		self.parser = ElandExtendedParser()
-		
+
 class ElandMultiFile(ElandFile):
-	
 	def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
@@ -581,9 +531,8 @@ class ElandMultiFile(ElandFile):
 			self.file = open(file_path, mode)
 		self.mode = mode
 		self.parser = ElandMultiParser()
-		
+
 class BwaSamFile(ElandFile):
-	
 	def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
@@ -624,10 +573,9 @@ class BwaSamFile(ElandFile):
 				traceback.print_exc()
 				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
 				continue
-			
-class BowtieSamFile(ElandFile):
 
-	def __init__(self, file_path, mode='r'):
+class BowtieSamFile(ElandFile):
+        def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
 		elif file_path.endswith('.bz2'):
@@ -667,9 +615,8 @@ class BowtieSamFile(ElandFile):
 				traceback.print_exc()
 				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
 				continue
-				
-class ElandSamFile(ElandFile):
 
+class ElandSamFile(ElandFile):
 	def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
@@ -709,10 +656,9 @@ class ElandSamFile(ElandFile):
 				# Just skip the line if there's a parsing error
 				traceback.print_exc()
 				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
-				continue	
-				
-class IlluminaSamFile(ElandFile):
+				continue
 
+class IlluminaSamFile(ElandFile):
 	def __init__(self, file_path, mode='r'):
 		if file_path.endswith('.gz'):
 			self.file = gzip.open(file_path, mode)
@@ -752,8 +698,4 @@ class IlluminaSamFile(ElandFile):
 				# Just skip the line if there's a parsing error
 				traceback.print_exc()
 				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
-				continue	
-	
-			
-			
-		
+				continue
