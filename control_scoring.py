@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import subprocess
 import os
@@ -34,7 +34,7 @@ def query_control_db(conn, name, peakcaller):
 	if not result:
 		return -1
 	return int(result[0])
-	
+
 def complete_control_db(conn, name, peakcaller):
 	'''Updates Control status to completed.'''
 	
@@ -42,7 +42,7 @@ def complete_control_db(conn, name, peakcaller):
 	sql = "UPDATE encode_controls SET ready=1 WHERE name='%s' AND peakcaller='%s'" % (name, peakcaller)
 	cursor.execute(sql)
 	conn.commit()
-	
+
 def wait_for_control(conn, name, peakcaller):
 	'''Waits until control scoring is completed.
 	
@@ -89,7 +89,7 @@ def check_for_control(results_dir, peakcaller, use_control_lock=True):
 			conn.rollback()
 			wait_for_control(conn, results_dir, peakcaller)
 			return True
-			
+
 def remove_lock(results_dir, peakcaller, use_control_lock=True):
 	if not use_control_lock:
 		return
@@ -108,4 +108,3 @@ def remove_lock(results_dir, peakcaller, use_control_lock=True):
 		except Exception, e:
 			print e
 			conn.rollback()
-	
