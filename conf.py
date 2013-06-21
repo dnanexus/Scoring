@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import ConfigParser
 import os
@@ -37,7 +37,6 @@ GLOBAL_TMP_DIR = cp.get('globals', 'TMP_DIR')
 SAMTOOLS_BINARY = cp.get('globals', 'SAMTOOLS_BINARY')
 
 class ConfigSample:
-	
 	def __init__(self, config_file):
 		if not os.path.isfile(config_file):
 			raise Exception("Cannot find file %s" % config_file)
@@ -55,10 +54,8 @@ class ConfigSample:
 		replicate_sections.sort(key=lambda x: int(x[9:]))  # sort by replicate number e.g. replicate5
 		for s in replicate_sections:
 			self.REPLICATES.append(cp.get(s, 'mapped_reads').split(','))
-		
-		
+
 class ConfigControl:
-	
 	def __init__(self, config_file):
 		if not os.path.isfile(config_file):
 			raise Exception("Cannot find file %s" % config_file)
