@@ -4,6 +4,9 @@ import sys
 
 import chr_maps
 
+# Converts an ELAND file to "tagAlign" format
+# (https://genome.ucsc.edu/FAQ/FAQformat.html#format15 ?)
+
 def main(eland_file, ta_file, genome):
 	if genome not in chr_maps.genomes:
 		print "Genome %s not found. Valid genomes are %s" % (genome, ','.join(chr_maps.genomes.keys()))
@@ -37,6 +40,6 @@ def main(eland_file, ta_file, genome):
 
 if __name__ == '__main__':
 	if not len(sys.argv) == 4:
-		print "Usage: eland2tagAlign.py [eland file] [output file] [genome]"
+		print "Usage: eland2tagAlign.py eland_file output_file genome"
 		raise SystemExit(1)
 	main(sys.argv[1], sys.argv[2], sys.argv[3])
