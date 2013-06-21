@@ -1,4 +1,3 @@
-##
 # Adding additional species/genome builds is done here.  There are five
 # steps.
 # 1.  	Add a mapping from genome chromosome FASTA file to chromosome name.
@@ -13,13 +12,11 @@
 #               Manually edit batch-consistency-analysis.r to change the hard coded
 #               source (line 55) and chr.file (line 58) paths.
 # 4.	Select the IDR filtering thresholds in the IDR_THRESHOLDS mapping.
-# (5a.)	Specify the whole genome size in macs_genome_size 
+# (5a.)	Specify the whole genome size in macs_genome_size
 #		to be used as a parameter for MACS. The default MACS parameters
 #		should already be set.
 # (5b.)	If using PeakSeq, set the location of the pre-generated mappability
 #		file in peakseq_mappability_file
-##
-
 
 ucsc_hg18 = {
 	'chr1.fa' : 'chr1',
@@ -47,7 +44,7 @@ ucsc_hg18 = {
 	'chrM.fa' : 'chrM',
 	'chrX.fa' : 'chrX',
 	'chrY.fa' : 'chrY',
-}
+        }
 
 hg19_female = {
 	'chr1.fa' : 'chr1',
@@ -74,7 +71,7 @@ hg19_female = {
 	'chr9.fa' : 'chr9',
 	'chrM.fa' : 'chrM',
 	'chrX.fa' : 'chrX',
-}
+        }
 
 hg19_male = {
 	'chr1.fa' : 'chr1',
@@ -102,7 +99,7 @@ hg19_male = {
 	'chrM.fa' : 'chrM',
 	'chrX.fa' : 'chrX',
 	'chrY.fa' : 'chrY',
-}
+        }
 
 mm_ncbi_37 = {
 	'chr1.fa' : 'chr1',
@@ -114,7 +111,7 @@ mm_ncbi_37 = {
 	'chr15.fa' : 'chr15',
 	'chr16.fa' : 'chr16',
 	'chr17.fa' : 'chr17',
-    'chr18.fa' : 'chr18',
+        'chr18.fa' : 'chr18',
 	'chr19.fa' : 'chr19',
 	'chr2.fa' : 'chr2',
 	'chr3.fa' : 'chr3',
@@ -152,7 +149,7 @@ mm9_male = {
 	'chrM.fa' : 'chrM',
 	'chrX.fa' : 'chrX',
 	'chrY.fa' : 'chrY',
-	        }
+        }
 
 mm9_female = {
 	'chr1.fa' : 'chr1',
@@ -176,22 +173,22 @@ mm9_female = {
 	'chr9.fa' : 'chr9',
 	'chrM.fa' : 'chrM',
 	'chrX.fa' : 'chrX',
-	        }
+        }
 
 mm9_male_yale = {
-    'mm_ref_chr1.fa' : 'chr1',
-    'mm_ref_chr2.fa' : 'chr2',
-    'mm_ref_chr3.fa' : 'chr3',
-    'mm_ref_chr4.fa' : 'chr4',
-    'mm_ref_chr5.fa' : 'chr5',
-    'mm_ref_chr6.fa' : 'chr6',
-    'mm_ref_chr7.fa' : 'chr7',
-    'mm_ref_chr8.fa' : 'chr8',
-    'mm_ref_chr9.fa' : 'chr9',
-    'mm_ref_chrM.fa' : 'chrM',
-    'mm_ref_chrX.fa' : 'chrX',
-    'mm_ref_chrY.fa' : 'chrY',
-}
+        'mm_ref_chr1.fa' : 'chr1',
+        'mm_ref_chr2.fa' : 'chr2',
+        'mm_ref_chr3.fa' : 'chr3',
+        'mm_ref_chr4.fa' : 'chr4',
+        'mm_ref_chr5.fa' : 'chr5',
+        'mm_ref_chr6.fa' : 'chr6',
+        'mm_ref_chr7.fa' : 'chr7',
+        'mm_ref_chr8.fa' : 'chr8',
+        'mm_ref_chr9.fa' : 'chr9',
+        'mm_ref_chrM.fa' : 'chrM',
+        'mm_ref_chrX.fa' : 'chrX',
+        'mm_ref_chrY.fa' : 'chrY',
+        }
 
 maize_agpv1 = {
 	'ZmB73_AGPv1_chr1.fa' : 'chr1',
@@ -234,7 +231,7 @@ yeast = {
 	'chrXIV.fa' : 'chrXIV',
 	'chrXV.fa' : 'chrXV',
 	'chrXVI.fa' : 'chrXVI',
-}
+        }
 
 fly_dm3 = {
 	'chr2L.fa' : 'chr2L',
@@ -245,7 +242,7 @@ fly_dm3 = {
 	'chrX.fa' : 'chrX',
 	'chrU.fa' : 'chrU',
 	'chrM.fa' : 'chrM',
-}
+        }
 
 fly_r5_32 = {
 	'3RHet.fa' : 'chr3RHet',
@@ -263,7 +260,7 @@ fly_r5_32 = {
 	'3LHet.fa' : 'chr3LHet',
 	'XHet.fa' : 'chrXHet',
 	'2LHet.fa' : 'chr2LHet',
-}
+        }
 
 panTro2 = {
 	'chr1.fa' : 'chr1',
@@ -290,7 +287,7 @@ panTro2 = {
 	'chr20.fa' : 'chr20',
 	'chr21.fa' : 'chr21',
 	'chr22.fa' : 'chr22',
-}
+        }
 
 rheMac2 = {
 	'chr1.fa' : 'chr1',
@@ -314,7 +311,7 @@ rheMac2 = {
 	'chr19.fa' : 'chr19',
 	'chr20.fa' : 'chr20',
 	'chrX.fa' : 'chrX',
- }
+        }
 
 WS182 = {
 	'I.fa' : 'I',
@@ -324,8 +321,7 @@ WS182 = {
 	'V.fa' : 'V',
 	'X.fa' : 'X',
 	'MtDNA.fa' : 'MtDNA',
-}
-	
+        }
 
 genomes = {
 	'ucsc_hg18' : ucsc_hg18,
@@ -344,8 +340,7 @@ genomes = {
 	'mm9_male_yale' : mm9_male_yale,
 	'fly_dm3' : fly_dm3,
 	'r5-32' : fly_r5_32,
-}
-
+        }
 
 peakseq_mappability_file = {
 	'hg19_female' : '/srv/gs1/projects/scg/Scoring/mappability/hg19_female.txt',
@@ -361,8 +356,7 @@ peakseq_mappability_file = {
 	'WS220' : '/srv/gs1/projects/scg/Scoring/mappability/WS182.txt',
 	'yeast_scg_5_08' : '/srv/gs1/projects/scg/Scoring/mappability/yeast_scg_5_08.txt',
 	'arabidopsis_tair9' : '/srv/gs1/projects/scg/Scoring/mappability/arabidopsis_tair9.txt',
-}
-
+        }
 
 macs_genome_size = {
 	# If not one of the default MACS genomes, specify the specific number
@@ -380,7 +374,7 @@ macs_genome_size = {
 	'r5-32' : 'dm',
 	'panTro2' : '3350447512',
 	'rheMac2' : '2864106071',
-}
+        }
 
 IDR_THRESHOLDS = {
 	# Set IDR filtering thresholds.  Order is:
@@ -397,7 +391,7 @@ IDR_THRESHOLDS = {
 	'WS220' : (0.1, 0.1, 0.1),
 	'panTro2' : (0.01, 0.02, 0.0025),
 	'rheMac2' : (0.01, 0.02, 0.0025),
-}
+        }
 
 IDR_BIN_DIR = {
 	# Verify that IDR directories contain both IDR binaries AND
@@ -413,11 +407,9 @@ IDR_BIN_DIR = {
 	'mm9_female' : '/srv/gs1/projects/scg/Scoring/idr/bins/mouse_mm9',
 	'panTro2' : '/srv/gs1/projects/scg/Scoring/idr/bins/chimp_pantro2',
 	'rheMac2' : '/srv/gs1/projects/scg/Scoring/idr/bins/rhesus_rhemac2',
-}
-
+        }
 
 def get_chr_mapping(genome):
 	if genome not in genomes:
 		raise Exception("%s does not have chr mapping." % genome)
 	return genomes[genome]
-	
