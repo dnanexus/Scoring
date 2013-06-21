@@ -11,7 +11,7 @@ def replicate_pairs(num_reps):
 		for j in range(i+1, num_reps+1):
 			rep_pairs.append((i, j))
 	return rep_pairs
-	
+
 def num_hits(idr_hit_list, idr_threshold):
 	f = open(idr_hit_list, 'r')
 	num_hits = 0
@@ -25,7 +25,7 @@ def num_hits(idr_hit_list, idr_threshold):
 			num_hits += 1
 	f.close()
 	return num_hits
-	
+
 def hit_cmd(unfiltered_pooled_hits, num_hits, output_file):
 	sorted_hits = unfiltered_pooled_hits + '.sorted'
 	if not os.path.exists(sorted_hits):
@@ -64,13 +64,9 @@ def main(sample_name, genome, num_reps, idr_dir, unfiltered_pooled_hits, output_
 	hit_cmd(unfiltered_pooled_hits, max_rep_hits, cons_file)
 	opt_file = os.path.join(output_dir, '%s_optimal_narrowPeak.bed' % sample_name)
 	hit_cmd(unfiltered_pooled_hits, max(num_peaks_pooled, max_rep_hits), opt_file)
-	
-	
-	
-	
+
 if __name__=='__main__':
 	if not len(sys.argv) == 7:
-		print "Usage:  idr_filter.py <sample name> <genome> <number of replicates> <idr directory> <unfiltered pooled hits file> <output directory>"
+		print "Usage: idr_filter.py <sample name> <genome> <number of replicates> <idr directory> <unfiltered pooled hits file> <output directory>"
 		raise SystemExit(1)
-	
 	main(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4], sys.argv[5], sys.argv[6])
