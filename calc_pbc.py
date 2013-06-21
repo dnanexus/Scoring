@@ -1,14 +1,28 @@
-#!/bin/env python
+#!/usr/bin/env python
 
-### NOTE:  Assuming read file has already been filtered for only uniquely
-## mappable reads.
+# Calculates the "PCR bottlenecking coefficient" (PBC), a measure of
+# library complexity.
+#
+# Let m_distinct be the number of genomic locations to which at least one
+# read maps; let m_1 be the number of locations to which exactly one read
+# maps. PBC = m_1 / m_distinct.
+#
+# Note that this differs somewhat from the "nonredundant fraction" (NRF)
+# metric described in Landt et al. (2012), which is defined as "the ratio
+# between the number of positions in the genome that uniquely mappable
+# reads map to and the total number of uniquely mappable reads".
+#
+# This code assumes the mappings file has already been filtered for only
+# uniquely mappable reads.
 
 import sys
 
 def main(read_file, output_file=None, name=None):
 	rf = open(read_file, 'r')
 	chrs = {}
+        # Number of genomic locations to which exactly one read maps
 	m_1 = 0
+        # Number of genome locations to which at least one read maps
 	m_distinct = 0
 	if not name:
 		name = read_file.split('/')[-1]
@@ -41,7 +55,7 @@ def main(read_file, output_file=None, name=None):
 		of = open(output_file, 'a')
 		of.write('\t'.join([name, str(m_1), str(m_distinct), str(float(m_1) / float(m_distinct)),]) + '\n')
 		of.close()
-	
+
 if __name__ == '__main__':
 	if len(sys.argv) == 2:
 		main(sys.argv[1])
@@ -50,6 +64,5 @@ if __name__ == '__main__':
 	if len(sys.argv) == 4:
 		main(sys.argv[1], sys.argv[2], sys.argv[3])
 	else:
-		print "Usage:  calc_pcb.py <SAM or eland file> [output_stats_file] [name]"
+		print "Usage: calc_pbc.py <SAM or eland file> [output_stats_file] [name]"
 		raise SystemExit(1)
-	
