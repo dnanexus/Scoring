@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 import os
@@ -19,7 +19,7 @@ def divide_eland_by_chr(eland_file, genome, output_dir=""):
 	i.close()
 	for f in chr_files.values():
 		f.close()
-		
+
 def open_chr_file(chr_name, chr_files, genome, chr_map, output_dir=""):
 	if chr_name in chr_files:
 		return chr_files[chr_name]
@@ -28,7 +28,7 @@ def open_chr_file(chr_name, chr_files, genome, chr_map, output_dir=""):
 			os.path.join(output_dir, '%s_eland.txt' % (chr_map[chr_name])), 'w')
 		chr_files[chr_name] = f
 		return f
-		
+
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
 		print "Usage:  divide_eland.py eland_file genome [output_dir]"
