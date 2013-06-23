@@ -8,8 +8,10 @@ if os.path.exists('globals.conf'):
 	print "Using local globals.conf file"
 else:
 	globals_file = DEFAULT_GLOBALS
+
 cp = ConfigParser.ConfigParser()
 cp.read(globals_file)
+
 BIN_DIR = cp.get('globals', 'BIN_DIR')
 SUBMISSION_BIN_DIR = cp.get('globals', 'SUBMISSION_BIN_DIR')
 R_BINARY = cp.get('globals', 'R_BINARY')
