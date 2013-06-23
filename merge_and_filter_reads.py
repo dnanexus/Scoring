@@ -1,9 +1,18 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 import os
 import subprocess
 import conf
+
+# This script takes one or more input files containing mappings in SAM,
+# BAM, or ELAND format. The files are converted to ELAND format, filtered
+# to include only uniquely mapped reads, and written to a single ELAND
+# output file.
+#
+# TODO: This script could be eliminated if the pipeline app took Mappings
+# tables as input. Internally these could be dumped to ELAND format for
+# compatibility with the existing pipeline scripts.
 
 from eland import ElandExtendedFile, ElandMultiFile, ElandFile, BwaSamFile, BowtieSamFile, ElandSamFile, IlluminaSamFile
 
@@ -41,7 +50,7 @@ def convert_bowtiesam(eland_output, sam_input, mismatches):
 	input.close()
 	
 def convert_illuminasam(eland_output, sam_input, mismatches):
-	'''Converts SAM file from Bowtie to Eland, filters out reads with no more than the specified number of mismatches.  NOTE:  Due to limitations of Illumina format, does not filter out unique reads.  Assumes prefiltered.'''
+	'''Converts SAM file from Bowtie to Eland, filters out reads with no more than the specified number of mismatches. NOTE: Due to limitations of Illumina format, does not filter out unique reads. Assumes prefiltered.'''
 	input = IlluminaSamFile(sam_input, 'r')
 	total_passed = 0
 	for i, line in enumerate(input):
@@ -157,6 +166,6 @@ def merge_unique_eland(output, mapped_reads_files, mismatches=2):
 	
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
-		print "Usage:  merge_and_filter_reads.py output_file reads_file [reads_file ...]"
+		print "Usage: merge_and_filter_reads.py output_file reads_file [reads_file ...]"
 		raise SystemExit(1)
 	merge_unique_eland(sys.argv[1], sys.argv[2:])
