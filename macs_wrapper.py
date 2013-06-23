@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 import subprocess
@@ -10,7 +10,7 @@ def main(x_correlation_file, rep_name, macs_cmd):
 		macs_cmd += ' --nomodel --shiftsize=%i' % (frag_length/2)
 	print macs_cmd
 	subprocess.call(macs_cmd, shell=True)
-	
+
 def get_frag_length(x_correlation_file, rep_name):
 	f = open(x_correlation_file, 'r')
 	sum_frag_lengths = 0
@@ -25,10 +25,9 @@ def get_frag_length(x_correlation_file, rep_name):
 		sum_frag_lengths += frag_length
 		num_frag_lengths += 1
 	return sum_frag_lengths / num_frag_lengths
-	
+
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
-		print "Usage:  macs_wrapper.py <X Correlation File> <Replicate Name> <MACS command>"
+		print "Usage: macs_wrapper.py <X Correlation File> <Replicate Name> <MACS command>"
 		raise SystemExit(1)
 	main(sys.argv[1], sys.argv[2], sys.argv[3:])
-		
