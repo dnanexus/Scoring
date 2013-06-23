@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import os
 import sjm
@@ -12,7 +12,7 @@ PROJECT = conf.SGE_PROJECT
 R_BINARY = conf.R_BINARY
 SPP_BINARY = conf.SPP_BINARY
 SPP_BINARY_NO_DUPS = conf.SPP_BINARY_NO_DUPS
-	
+
 def idr_analysis_cmd(hit1, hit2, output, ranking_measure, genome):
 	cmd = R_BINARY + ' '
 	cmd += os.path.join(IDR_BIN_DIR[genome], 'batch-consistency-analysis.r')
@@ -22,7 +22,7 @@ def idr_analysis_cmd(hit1, hit2, output, ranking_measure, genome):
 	cmd += ' 0 F'
 	cmd += ' %s' % ranking_measure
 	return cmd
-		
+
 # def idr_filter(name, sample):
 # 	cmd = '/srv/gs1/projects/scg/Scoring/dev_pipeline2/idr_filter_macs2.py'
 # 	#cmd = os.path.join(BIN_DIR, 'idr_filter.py')
@@ -33,7 +33,7 @@ def idr_analysis_cmd(hit1, hit2, output, ranking_measure, genome):
 # 	cmd += ' %s' % os.path.join(os.path.join(sample.results_dir, 'All'), sample.combined_replicate.unfiltered_results)
 # 	cmd += ' %s' % sample.results_dir
 # 	sample.add_jobs(name, [sjm.Job('idr_filter_' + sample.run_name, [cmd,], queue=QUEUE, project=PROJECT),])
-	
+
 def cross_correlation_analysis(name, sample, no_duplicates=False, options=None):
 	if not options:
 		options = {}
@@ -63,4 +63,3 @@ def cross_correlation_analysis(name, sample, no_duplicates=False, options=None):
 		cmds.append(cmd)
 		
 	sample.add_jobs(name, [sjm.Job('x_correlation_' + sample.run_name, cmds, queue=QUEUE, project=PROJECT, memory='8G'),])
-	
