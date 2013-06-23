@@ -1,4 +1,6 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# This script is only run when the peakseq peak caller is used.
 
 import sys
 import os
@@ -8,10 +10,9 @@ import chr_maps
 from bed import PeakSeqBEDParser
 from sgr_map import SGRMap
 
-
 def filter_peakseq(input_directory, sgr_directory, genome, output_file, q_value_threshold=None):
 	if genome not in chr_maps.genomes:
-		raise Exception("Genome %s not found.  Valid genomes:  %s" % (genome, str(chr_maps.genomes.keys())))
+		raise Exception("Genome %s not found. Valid genomes: %s" % (genome, str(chr_maps.genomes.keys())))
 	chr_map = chr_maps.genomes[genome]
 	# Load SGRMap
 	signal_map = SGRMap()
@@ -49,17 +50,13 @@ def filter_peakseq(input_directory, sgr_directory, genome, output_file, q_value_
 		else:
 			output.write(str(hit) + '\n')
 	output.close()
-	
-	
+
 if __name__ == '__main__':
 	if len(sys.argv) < 5:
-		print "Usage:  filter_hits.py hits_directory sgr_directory genome output_file [q_value_threshold]"
+		print "Usage: filter_hits.py hits_directory sgr_directory genome output_file [q_value_threshold]"
 		raise SystemExit(1)
 	if len(sys.argv) == 6:
 		q_value_threshold = float(sys.argv[5])
 	else:
 		q_value_threshold = None
-		
 	filter_peakseq(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], q_value_threshold)
-	
-	
