@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sjm
 import os
@@ -7,7 +7,6 @@ import glob
 import chr_maps
 import idr
 import conf
-
 
 BIN_DIR = conf.BIN_DIR
 SUBMISSION_BIN_DIR = conf.SUBMISSION_BIN_DIR
@@ -20,7 +19,7 @@ NAME = 'macs'
 USE_CONTROL_LOCK = False
 
 from peakseq import archive_results
-	
+
 def check_control_inputs(control):
 	if control.genome not in chr_maps.genomes:
 		raise Exception("Genome %s not found.  Valid genomes: " % (control.genome, ' '.join(chr_maps.genomes.keys())))
@@ -29,7 +28,7 @@ def check_control_inputs(control):
 	for mr in control.mapped_read_files:
 		if not os.path.exists(mr):
 			raise Exception("Cannot find mapped reads file %s" % mr)
-			
+
 def check_sample_inputs(sample):
 	if os.path.exists(os.path.join(sample.results_dir, 'rep_stats')):
 		raise Exception("Sample results non-empty.")
@@ -39,15 +38,15 @@ def check_sample_inputs(sample):
 		raise Exception("Genome %s not found. Valid genomes: " % (sample_conf.GENOME, ' '.join(chr_maps.genomes.keys())))
 	if sample.genome not in chr_maps.macs_genome_size:
 		raise Exception("Genome %s MACS size not found.  Valid genomes: " % (sample.genome, ' '.join(chr_maps.macs_genome_size.keys())))
-		
+
 def prep_control(control):
 	if not os.path.isdir(control.temp_dir):
 		os.makedirs(control.temp_dir)
 	if not os.path.isdir(control.results_dir):
 		os.makedirs(control.results_dir)
-		
+
 from peakseq import prep_sample
-		
+
 def form_control_files(name, control):
 	cmds = []
 	control.merged_file_location = os.path.join(control.results_dir, '%s_merged_eland.txt' % control.run_name)
@@ -61,7 +60,7 @@ def form_control_files(name, control):
 	
 	j = sjm.Job(control.run_name, cmds, queue=QUEUE, project=PROJECT)
 	control.add_jobs(name, [j,])
-		
+
 from peakseq import form_sample_files
 
 def form_sample_files_nodups(name, sample):
@@ -70,7 +69,7 @@ def form_sample_files_nodups(name, sample):
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_merge', form_replicate_files(rep, sample, rmdups=True), queue=QUEUE, project=PROJECT, memory='16G'))
 	jobs.append(sjm.Job(sample.run_name + '_All_merge', form_replicate_files(sample.combined_replicate, sample, rmdups=True), queue=QUEUE, project=PROJECT, memory='16G'))
 	sample.add_jobs(name, jobs)
-	
+
 def form_replicate_files(rep, sample, rmdups=False):
 	cmds = []
 	# Make directories
@@ -109,7 +108,6 @@ def form_replicate_files(rep, sample, rmdups=False):
 	cmd += ' %s %s %s' % (rep.merged_file_location, rep.pr1_merged, rep.pr2_merged)
 	cmds.append(cmd)
 	return cmds
-	
 
 from peakseq import complete_control
 
@@ -171,7 +169,7 @@ def run_peakcaller(name, control, sample, options=None):
 		cmds.append(macs_wrapper_cmd)
 		jobs.append(sjm.Job('MACS_' + r.rep_name(sample) + '_PR2', cmds, queue=QUEUE, project=PROJECT, memory='16G'))
 	sample.add_jobs(name, jobs)
-			
+
 def merge_results(name, sample):
 	for r in sample.replicates + [sample.combined_replicate,]:
 		r.unfiltered_results = os.path.join(r.results_dir(sample), '%s_peaks.bed' % r.rep_name(sample))
@@ -179,7 +177,7 @@ def merge_results(name, sample):
 		r.unfiltered_results_pr2 = os.path.join(r.pr2_results_dir, '%s_PR2_peaks.bed' % r.rep_name(sample))
 	j = sjm.Job('merge_results', ['echo merge_results', ], queue=QUEUE, project=PROJECT, host='localhost')
 	sample.add_jobs(name, [j,])
-			
+
 from peakseq import replicate_scoring			
 
 def form_idr_inputs(name, sample):
@@ -222,7 +220,7 @@ def form_idr_inputs(name, sample):
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_PR2_narrowPeak_filter', cmds, queue=QUEUE, project=PROJECT, dependencies=[np_job,]))
 	
 	sample.add_jobs(name, jobs)
-	
+
 from peakseq import mail_results
 
 def cleanup(sample, control):
@@ -237,7 +235,7 @@ def cleanup(sample, control):
 			if td and os.path.exists(td):
 				cmds.append('rm -rf %s' % td)
 	return sjm.Job('cleanup', cmds, queue=QUEUE, project=PROJECT, dependencies=sample.all_jobs() + control.all_jobs())
-	
+
 def idr_analysis(name, sample):
 	jobs = []
 	for i, rep_a in enumerate(sample.replicates):
@@ -258,7 +256,6 @@ def idr_analysis(name, sample):
 	jobs.append(sjm.Job('idr_analysis_'+ idr_name, [cmd,], queue=QUEUE, project=PROJECT))
 	
 	sample.add_jobs(name, jobs)
-
 
 def idr_filter(name, sample):
 	cmd = os.path.join(BIN_DIR, 'idr_filter.py')
