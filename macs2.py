@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sjm
 import os
@@ -7,7 +7,6 @@ import glob
 import chr_maps
 import idr
 import conf
-
 
 BIN_DIR = conf.BIN_DIR
 SUBMISSION_BIN_DIR = conf.SUBMISSION_BIN_DIR
@@ -102,7 +101,7 @@ def run_peakcaller(name, control, sample, options=None):
 		cmds.append(macs_wrapper_cmd)
 		jobs.append(sjm.Job('MACS_' + r.rep_name(sample) + '_PR2', cmds, queue=QUEUE, project=PROJECT, memory='16G'))
 	sample.add_jobs(name, jobs)
-			
+
 def merge_results(name, sample):
 	for r in sample.replicates + [sample.combined_replicate,]:
 		r.unfiltered_results = os.path.join(r.results_dir(sample), '%s_peaks.encodePeak' % r.rep_name(sample))
@@ -110,7 +109,7 @@ def merge_results(name, sample):
 		r.unfiltered_results_pr2 = os.path.join(r.pr2_results_dir, '%s_PR2_peaks.encodePeak' % r.rep_name(sample))
 	j = sjm.Job('merge_results', ['echo merge_results', ], queue=QUEUE, project=PROJECT, host='localhost')
 	sample.add_jobs(name, [j,])
-			
+
 from peakseq import replicate_scoring			
 
 def form_idr_inputs(name, sample):
@@ -137,7 +136,7 @@ def form_idr_inputs(name, sample):
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_PR2_narrowPeak_filter', cmds, queue=QUEUE, project=PROJECT))
 	
 	sample.add_jobs(name, jobs)
-	
+
 from peakseq import mail_results
 
 from macs import cleanup
