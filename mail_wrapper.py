@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 import subprocess
@@ -10,7 +10,7 @@ def main(subject, input, emails):
 
 	print cmd
 	subprocess.call(cmd, shell=True)
-	
+
 if __name__ == '__main__':
 	if not len(sys.argv) >= 4:
 		print "Usage: mail_wrapper.py <subject> <input_file> <email> [<email> ...]"
