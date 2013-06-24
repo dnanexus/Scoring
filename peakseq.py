@@ -1,5 +1,3 @@
-#!/bin/env python
-
 import sjm
 import os
 
@@ -11,7 +9,7 @@ BIN_DIR = conf.BIN_DIR
 SUBMISSION_BIN_DIR = conf.SUBMISSION_BIN_DIR
 QUEUE = conf.QUEUE
 PROJECT = conf.SGE_PROJECT
-PEAKSEQ_BINARY = conf.PEAKSEQ_BINARY 
+PEAKSEQ_BINARY = conf.PEAKSEQ_BINARY
 BIN_SIZE = conf.PEAKSEQ_BIN_SIZE
 
 NAME = 'peakseq'
@@ -31,7 +29,7 @@ def check_control_inputs(control):
 			raise Exception("Cannot find mapped reads file %s" % mr)
 	if os.path.exists(control.archive_file):
 		raise Exception("Archive of control results already exists as %s" % control.archive_file)
-		
+
 def check_sample_inputs(sample):
 	if os.path.exists(os.path.join(sample.results_dir, 'rep_stats')):
 		raise Exception("Sample results non-empty.")
@@ -43,7 +41,7 @@ def check_sample_inputs(sample):
 		raise Exception("Cannot find sample mappability file %s" % chr_maps.peakseq_mappability_file[sample.genome])
 	if sample.genome not in chr_maps.genomes:
 		raise Exception("Genome %s not found. Valid genomes: " % (sample_conf.GENOME, ' '.join(chr_maps.genomes.keys())))
-		
+
 def prep_control(control):
 	if not os.path.isdir(control.results_dir):
 		os.makedirs(control.results_dir)
@@ -51,13 +49,13 @@ def prep_control(control):
 		os.makedirs(control.temp_dir)
 	if not os.path.isdir(control.sgr_dir):
 		os.makedirs(control.sgr_dir)
-		
+
 def prep_sample(sample):
 	if not os.path.isdir(sample.results_dir):
 		os.makedirs(sample.results_dir)
 	if not os.path.isdir(sample.temp_dir):
 		os.makedirs(sample.temp_dir)
-		
+
 def form_control_files(name, control):
 	cmds = []
 	control.merged_file_location = os.path.join(control.temp_dir, '%s_merged_eland.txt' % control.run_name)
@@ -79,14 +77,14 @@ def form_control_files(name, control):
 	cmd += ' %s %s' % (control.sgr_dir, control.results_dir)
 	cmds.append(cmd)
 	control.add_jobs(name, [sjm.Job(control.run_name, cmds, queue=QUEUE, project=PROJECT),])
-	
+
 def form_sample_files(name, sample):
 	jobs = []
 	for rep in sample.replicates:
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_merge', form_replicate_files(rep, sample), queue=QUEUE, project=PROJECT))
 	jobs.append(sjm.Job(sample.run_name + '_All_merge', form_replicate_files(sample.combined_replicate, sample), queue=QUEUE, project=PROJECT))
 	sample.add_jobs(name, jobs)
-				
+
 def form_replicate_files(rep, sample):
 	cmds = []
 	# Make directories
@@ -135,7 +133,7 @@ def form_replicate_files(rep, sample):
 	cmd += ' %s %s %s' % (rep.pr2_merged, sample.genome, rep.temp_dir(sample))
 	cmds.append(cmd)
 	return cmds
-	
+
 def complete_control(name, control):
 	if USE_CONTROL_LOCK:
 		cmd = 'python '
@@ -143,10 +141,10 @@ def complete_control(name, control):
 		cmd += ' %s' % control.results_dir
 		cmd += ' %s' % control.peakcaller
 		control.add_jobs(name, [sjm.Job('complete_control', [cmd,], queue=QUEUE, project=PROJECT, host='localhost'),])
-			
+
 def archive_control(name, control):
 	control.add_jobs(name, [archive_results(control.run_name, control.results_dir, control.archive_file),])
-	
+
 def archive_sample(name, sample, control):
 	# Put archive file locations in stats file for SNAP
 	f = open(os.path.join(sample.results_dir, 'rep_stats'), 'a')
@@ -155,7 +153,7 @@ def archive_sample(name, sample, control):
 	f.close()
 	
 	sample.add_jobs(name, [archive_results(sample.run_name, sample.results_dir, sample.archive_file),])
-	
+
 def calc_pbc(name, control, sample):
 	pbc_stats_file = os.path.join(sample.results_dir, 'pbc_stats.txt')
 	cmds = []
@@ -166,7 +164,7 @@ def calc_pbc(name, control, sample):
 		cmd += ' %s' % r.rep_name(sample)
 		cmds.append(cmd)
 	sample.add_jobs(name, [sjm.Job('calc_pbc', cmds, queue=QUEUE, project=PROJECT, memory='6G'),])
-	
+
 def run_peakcaller(name, control, sample, options=None):
 	if not options:
 		options = {}
@@ -208,7 +206,7 @@ def run_peakcaller(name, control, sample, options=None):
 				mappability_file,)
 			cmd = os.path.join(BIN_DIR, 'peakseq_wrapper.py') + ' ' + cmd
 			sample.add_jobs(name, [sjm.Job(r.rep_name(sample) + '_PR2_%s' % chr, [cmd,], queue=QUEUE, project=PROJECT),])
-	
+
 def merge_results(name, sample):
 	for r in sample.replicates + [sample.combined_replicate,]:
 		for q_val in sample.conf.Q_VALUE_THRESHOLDS + [0,]:
@@ -229,7 +227,7 @@ def merge_results(name, sample):
 		r.unfiltered_results_pr2 = output
 		cmd = filter_hits_cmd(r.pr1_results_dir, r.pr1_sgr_dir, sample.genome, output)
 		sample.add_jobs(name, [sjm.Job('merge_' + r.rep_name(sample) + '_PR2', [cmd,], queue=QUEUE, project=PROJECT),])
-				
+
 def filter_hits_cmd(results_dir, sgr_dir, genome, output, q_val=None):
 	cmd = os.path.join(BIN_DIR, 'filter_hits.py')
 	cmd += ' %s' % results_dir
@@ -264,7 +262,7 @@ def replicate_scoring(name, sample):
 				
 	j = sjm.Job('replicate_stats', cmds, queue=QUEUE, project=PROJECT)
 	sample.add_jobs(name, [j,])
-	
+
 def form_idr_inputs(name, sample):
 	os.makedirs(os.path.join(sample.results_dir, 'idr'))
 	jobs = []
@@ -307,7 +305,7 @@ def mail_results(sample, control, run_name, emails):
 	cmds.append(cmd)
 	
 	return sjm.Job('mail_results', cmds, queue=QUEUE, project=PROJECT, host='localhost', dependencies=sample.all_jobs() + control.all_jobs())
-	
+
 def cleanup(sample, control):
 	cmds = []
 	if sample:
@@ -323,7 +321,7 @@ def cleanup(sample, control):
 		if os.path.exists(control.merged_file_location):
 			cmds.append('rm %s' % control.merged_file_location)
 	return sjm.Job('cleanup', cmds, queue=QUEUE, project=PROJECT, dependencies=sample.all_jobs() + control.all_jobs())
-		
+
 def idr_analysis(name, sample):
 	jobs = []
 	for i, rep_a in enumerate(sample.replicates):
@@ -344,7 +342,7 @@ def idr_analysis(name, sample):
 	jobs.append(sjm.Job('idr_analysis_'+ idr_name, [cmd,], queue=QUEUE, project=PROJECT))
 	
 	sample.add_jobs(name, jobs)
-	
+
 def idr_filter(name, sample):
 	cmd = os.path.join(BIN_DIR, 'idr_filter.py')
 	cmd += ' %s' % sample.run_name
