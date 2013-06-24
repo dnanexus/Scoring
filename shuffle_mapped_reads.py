@@ -1,4 +1,9 @@
-#!/bin/env python
+#!/usr/bin/env python
+
+# Randomly splits a file containing mappings into two files. Each line in
+# the input file has an equal probability of being written to each of the
+# output files. This is used to form the two pseudo-replicates from each
+# sample replicate.
 
 import random
 import sys
