@@ -124,8 +124,7 @@ def convert_sam(eland_output, sam_input, mismatches):
 		convert_bowtiesam(eland_output, sam_input, mismatches)
 		
 def convert_bam(eland_output, bam_input, mismatches):
-	sam_input = os.path.join(TMP_DIR, os.path.basename(bam_input)[:-4
-	] + '.sam')
+	sam_input = os.path.join(TMP_DIR, os.path.basename(bam_input)[:-4] + '.sam')
 	bam2sam_cmd = SAMTOOLS_BIN + ' view -h %s > %s' % (bam_input, sam_input)
 	subprocess.call(bam2sam_cmd, shell=True)
 	convert_sam(eland_output, sam_input, mismatches)
