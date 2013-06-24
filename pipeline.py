@@ -68,7 +68,6 @@ import idr
 from conf import ConfigControl, ConfigSample
 import conf
 
-
 BIN_DIR = conf.BIN_DIR
 ARCHIVE_DIR = conf.ARCHIVE_DIR
 DOWNLOAD_BASE = conf.DOWNLOAD_BASE
@@ -89,7 +88,6 @@ class ScoringJobs:
 		for jn, js in self.jobs.iteritems():
 			all_jobs += js
 		return all_jobs
-				
 
 class Control(ScoringJobs):
 	def __init__(self, run_name, results_dir, temp_dir, genome, mapped_read_files, conf, peakcaller):
@@ -108,7 +106,7 @@ class Control(ScoringJobs):
 		
 	def __str__(self):
 		return self.run_name
-		
+
 class Sample(ScoringJobs):
 	def __init__(self, run_name, results_dir, temp_dir, genome, replicates, conf):
 		self.run_name = run_name
@@ -128,7 +126,7 @@ class Sample(ScoringJobs):
 			
 	def __str__(self):
 		return self.run_name
-		
+
 class SampleReplicate:
 	def __init__(self, rep_num, mapped_read_files):
 		self.rep_num = rep_num
@@ -149,7 +147,7 @@ class SampleReplicate:
 		
 	def __str__(self):
 		return "Rep%i" % self.rep_num
-		
+
 class CombinedReplicate(SampleReplicate):
 	def __init__(self, mapped_read_files):
 		self.mapped_read_files = mapped_read_files
@@ -168,8 +166,12 @@ def add_dependencies(primary_jobs, dependent_jobs):
 	for dj in dependent_jobs:
 		for pj in primary_jobs:
 			dj.add_dependency(pj)		
-		
-def main(peakcaller, run_name, control_conf, sample_conf=None, force=False, print_cmds=False, log_dir=None, no_duplicates=False, archive_results=True, emails=None, peakcaller_options=None, xcorrelation_options=None, remove_duplicates=False):
+
+def main(peakcaller, run_name, control_conf, sample_conf=None,
+         force=False, print_cmds=False, log_dir=None, no_duplicates=False,
+         archive_results=True, emails=None,
+         peakcaller_options=None, xcorrelation_options=None, remove_duplicates=False):
+
 	control_conf = ConfigControl(control_conf)
 	if sample_conf:
 		sample_conf = ConfigSample(sample_conf)
@@ -224,7 +226,6 @@ def main(peakcaller, run_name, control_conf, sample_conf=None, force=False, prin
 			peakcaller.archive_sample('archive_sample', sample, control)
 			add_dependencies(sample.jobs['merge_results'], sample.jobs['archive_sample'])
 		
-		
 		# IDR Analysis
 		peakcaller.form_idr_inputs('idr_format_inputs', sample)
 		add_dependencies(sample.jobs['merge_results'], sample.jobs['idr_format_inputs'])
@@ -270,8 +271,7 @@ def main(peakcaller, run_name, control_conf, sample_conf=None, force=False, prin
 		submission.run(os.path.join(log_dir, run_name + '.jobs'))
 	else:
 		submission.run(run_name + '.jobs')
-	
-	
+
 if __name__ == '__main__':
 	options, arguments = getopt.gnu_getopt(sys.argv[1:], 'fdaphl:n:m:c:', ['force', 'no_duplicates', 'no_archive', 'print', 'help', 'log', 'mail', 'peakcaller', 'snap', 'filtchr=', 'rmdups',])
 	force = False
@@ -343,4 +343,7 @@ if __name__ == '__main__':
 		print "Invalid Peakcaller selected.  Options are 'peakseq', 'macs', 'macs2',  'spp' or 'spp_nodups'"
 		raise SystemExit(1)	
 	
-	main(peakcaller_module, run_name, control_conf, sample_conf=sample_conf, force=force, print_cmds=print_cmds, log_dir=log_dir, no_duplicates=no_duplicates, archive_results=archive_results, emails=emails, peakcaller_options=peakcaller_options, xcorrelation_options=xcorrelation_options, remove_duplicates=remove_duplicates)
+	main(peakcaller_module, run_name, control_conf, sample_conf=sample_conf, force=force,
+             print_cmds=print_cmds, log_dir=log_dir, no_duplicates=no_duplicates,
+             archive_results=archive_results, emails=emails,
+             peakcaller_options=peakcaller_options, xcorrelation_options=xcorrelation_options, remove_duplicates=remove_duplicates)
