@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 
 import sys
 import math
@@ -9,18 +9,17 @@ def main(hits_file1, hits_file2, stats_file, q_value, percent_of_hits=.4, name=N
 	"""Calculates the percentage of hits which overlap.
 	
 	Args:
-		hits_file1:  A file of BED annotations
-		hits_file2:  A file of BED annotations
-		stats_file:  A file which will be appended with the overlap stats
-		q_value:  Float of the q-value to use as a cutoff.  Use -1.0 for no filtering.
-		percent_of_hits:  A float of the top percentage of hits to compare
-	"""	
+		hits_file1: A file of BED annotations
+		hits_file2: A file of BED annotations
+		stats_file: A file which will be appended with the overlap stats
+		q_value: Float of the q-value to use as a cutoff.  Use -1.0 for no filtering.
+		percent_of_hits: A float of the top percentage of hits to compare
+	"""
 	hf1 = open(hits_file1, 'r')
 	hf2 = open(hits_file2, 'r')
 	sf = open(stats_file, 'a')
 	if not name:
 		name = hits_file1 + '_VS_' + hits_file2
-	
 	
 	hits1 = []
 	if hits_file1.endswith('.regionPeak') or hits_file1.endswith('.narrowPeak') or hits_file1.endswith('.narrowPeak.bed') or hits_file1.endswith('.regionPeak.bed'):
@@ -62,7 +61,7 @@ def main(hits_file1, hits_file2, stats_file, q_value, percent_of_hits=.4, name=N
 				break
 	print len(hits1), len(hits2), total_checked, total_overlap
 	sf.write('rep_overlap=%s=%f\n' % (name, float(total_overlap) / float(total_checked)))
-	
+
 def overlaps(hit1, hit2):
 	if not hit1.chr == hit2.chr:
 		return False
@@ -72,10 +71,10 @@ def overlaps(hit1, hit2):
 		return False
 	else:
 		return True
-		
+
 if __name__ == '__main__':
 	if len(sys.argv) < 5 or len(sys.argv) > 7:
-		print "Usage:  overlap_stats.py <BED file> <BED file> <stats file>  <q_value_cutoff (use -1 for no cutoff)> [<name>] [<percent_top_overlap>=.4]"
+		print "Usage: overlap_stats.py <BED file> <BED file> <stats file> <q_value_cutoff (use -1 for no cutoff)> [<name>] [<percent_top_overlap>=.4]"
 		raise SystemExit(1)
 		
 	hits_file1 = sys.argv[1]
