@@ -75,6 +75,7 @@ def convert_elandsam(eland_output, sam_input, mismatches):
 
 def convert_sam(eland_output, sam_input, mismatches):
 	'''Determines SAM format and converts to eland'''
+        print "Converting SAM..."
 	input = open(sam_input, 'r')
 	line = input.readline()
 	# Look for proper headers first
@@ -85,31 +86,41 @@ def convert_sam(eland_output, sam_input, mismatches):
 			for f in fields:
 				if f.startswith('PN:'):
 					program_name = f[3:]
+                                        print "Found program name %s" % program_name
 					continue
 				if f.startswith('ID:'):
 					program_name = f[3:]
+                                        print "Found program name %s" % program_name
 					continue
 			if program_name == 'bwa':
+                                print "Program name is bwa"
 				input.close()
 				convert_bwasam(eland_output, sam_input, mismatches)
 				return
 			elif program_name == 'bowtie':
+                                print "Program name is bowtie"
 				input.close()
 				convert_bowtiesam(eland_output, sam_input, mismatches)
+                                return
 			elif program_name == 'illumina_export2sam.pl':
+                                print "Program name is illumina_export2sam.pl"
 				input.close()
 				convert_illuminasam(eland_output, sam_input, mismatches)
 				return
 		line = input.readline()
 
+        print "No program name found; guessing SAM format from tags..."
+
 	# If no proper headers, try to guess appropriate SAM format
 	fields = line.split('\t')
 	for f in fields[11:]:
 		if f.startswith('X0'):
+                        print "Found X0 tag; guessing BWA SAM"
 			input.close()
 			convert_bwasam(eland_output, sam_input, mismatches)
 			return
 		if f.startswith('NM'):
+                        print "Found NM tag; guessing ELAND SAM"
 			input.close()
 			convert_elandsam(eland_output, sam_input, mismatches)
 			return
@@ -117,11 +128,13 @@ def convert_sam(eland_output, sam_input, mismatches):
 	if len(fields) == 11:  # No Custom flags
 		raise Exception("Cannot convert regular SAM file")
 	else:
+                print "Could not determine SAM format; falling back to bowtie SAM by default"
 		convert_bowtiesam(eland_output, sam_input, mismatches)
 
 def convert_bam(eland_output, bam_input, mismatches):
         # Figure out how to put this in a uniquely-named temp file
 	sam_input = os.path.basename(bam_input)[:-4] + '.sam'
+        print "Converting BAM to SAM..."
 	bam2sam_cmd = 'samtools view -h %s > %s' % (bam_input, sam_input)
 	subprocess.call(bam2sam_cmd, shell=True)
 	convert_sam(eland_output, sam_input, mismatches)
