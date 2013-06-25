@@ -121,7 +121,7 @@ def convert_sam(eland_output, sam_input, mismatches):
 
 def convert_bam(eland_output, bam_input, mismatches):
         # Figure out how to put this in a uniquely-named temp file
-	sam_input = os.path.basename(bam_input) + '.sam'
+	sam_input = os.path.basename(bam_input)[:-4] + '.sam'
 	bam2sam_cmd = 'samtools view -h %s > %s' % (bam_input, sam_input)
 	subprocess.call(bam2sam_cmd, shell=True)
 	convert_sam(eland_output, sam_input, mismatches)
