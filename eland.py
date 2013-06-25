@@ -492,11 +492,11 @@ class ElandFile:
 				return self.parser.parse(self.file.next())
 			except StopIteration:
 				raise StopIteration
-			except Exception, e:
-				# Just skip the line if there's a parsing error
-				sys.stderr.write(str(e) + '\n')
-				#return self.parser.parse(self.file.next())
-				continue
+			# except Exception, e:
+			# 	# Just skip the line if there's a parsing error
+			# 	sys.stderr.write(str(e) + '\n')
+			# 	#return self.parser.parse(self.file.next())
+			# 	continue
 			
 	def close(self):
 		self.file.close()
@@ -568,11 +568,11 @@ class BwaSamFile(ElandFile):
 					return self.parser.parse(line)
 				except:
 					continue
-			except Exception, e:
-				# Just skip the line if there's a parsing error
-				traceback.print_exc()
-				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
-				continue
+			# except Exception, e:
+			# 	# Just skip the line if there's a parsing error
+			# 	traceback.print_exc()
+			# 	sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
+			# 	continue
 
 class BowtieSamFile(ElandFile):
         def __init__(self, file_path, mode='r'):
@@ -610,11 +610,11 @@ class BowtieSamFile(ElandFile):
 					return self.parser.parse(line)
 				except:
 					continue
-			except Exception, e:
-				# Just skip the line if there's a parsing error
-				traceback.print_exc()
-				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
-				continue
+			# except Exception, e:
+			# 	# Just skip the line if there's a parsing error
+			# 	traceback.print_exc()
+			# 	sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
+			# 	continue
 
 class ElandSamFile(ElandFile):
 	def __init__(self, file_path, mode='r'):
@@ -652,11 +652,11 @@ class ElandSamFile(ElandFile):
 					return self.parser.parse(line)
 				except:
 					continue
-			except Exception, e:
-				# Just skip the line if there's a parsing error
-				traceback.print_exc()
-				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
-				continue
+			# except Exception, e:
+			# 	# Just skip the line if there's a parsing error
+			# 	traceback.print_exc()
+			# 	sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
+			# 	continue
 
 class IlluminaSamFile(ElandFile):
 	def __init__(self, file_path, mode='r'):
@@ -694,8 +694,8 @@ class IlluminaSamFile(ElandFile):
 					return self.parser.parse(line)
 				except:
 					continue
-			except Exception, e:
-				# Just skip the line if there's a parsing error
-				traceback.print_exc()
-				sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
-				continue
+			# except Exception, e:
+			# 	# Just skip the line if there's a parsing error
+			# 	traceback.print_exc()
+			# 	sys.stderr.write(str(self.line_num) + ': ' + self.current_line + str(e) + '\n')
+			# 	continue
