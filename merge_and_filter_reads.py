@@ -16,7 +16,9 @@ import subprocess
 from eland import ElandExtendedFile, ElandMultiFile, ElandFile, BwaSamFile, BowtieSamFile, ElandSamFile, IlluminaSamFile
 
 def convert_bwasam(eland_output, sam_input, mismatches):
-	'''Converts SAM file from BWA to Eland, filters out all but unique reads with no more than the specified number of mismatches'''
+	'''Converts a SAM file from BWA to Eland, filtering out all
+	but unique reads with no more than the specified number of
+	mismatches.'''
 	input = BwaSamFile(sam_input, 'r')
 	total_passed = 0
 	for i, line in enumerate(input):
@@ -31,7 +33,9 @@ def convert_bwasam(eland_output, sam_input, mismatches):
 	input.close()
 
 def convert_bowtiesam(eland_output, sam_input, mismatches):
-	'''Converts SAM file from Bowtie to Eland, filters out all but unique reads with no more than the specified number of mismatches.'''
+	'''Converts a SAM file from Bowtie to Eland, filtering out all
+	but unique reads with no more than the specified number of
+	mismatches.'''
 	input = BowtieSamFile(sam_input, 'r')
 	total_passed = 0
 	for i, line in enumerate(input):
@@ -46,7 +50,10 @@ def convert_bowtiesam(eland_output, sam_input, mismatches):
 	input.close()
 
 def convert_illuminasam(eland_output, sam_input, mismatches):
-	'''Converts SAM file from Bowtie to Eland, filters out reads with no more than the specified number of mismatches. NOTE: Due to limitations of Illumina format, does not filter out unique reads. Assumes prefiltered.'''
+	'''Converts a SAM file from Illumina to Eland, filtering out
+	reads with no more than the specified number of
+	mismatches. Due to limitations of the Illumina format, does
+	not filter out unique reads; assumes prefiltered.'''
 	input = IlluminaSamFile(sam_input, 'r')
 	total_passed = 0
 	for i, line in enumerate(input):
@@ -74,7 +81,7 @@ def convert_elandsam(eland_output, sam_input, mismatches):
 	input.close()
 
 def convert_sam(eland_output, sam_input, mismatches):
-	'''Determines SAM format and converts to eland'''
+	'''Determines the kind of SAM format and converts to Eland.'''
         print "Converting SAM..."
 	input = open(sam_input, 'r')
 	line = input.readline()
