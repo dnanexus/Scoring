@@ -109,8 +109,8 @@ def convert_sam(eland_output, sam_input, mismatches):
 				input.close()
 				convert_bowtiesam(eland_output, sam_input, mismatches)
                                 return
-			elif program_name == 'illumina_export2sam.pl':
-                                print "Program name is illumina_export2sam.pl"
+			elif 'export2sam.pl' in program_name:
+                                print "Program name contains export2sam.pl"
 				input.close()
 				convert_illuminasam(eland_output, sam_input, mismatches)
 				return
