@@ -3,7 +3,6 @@
 import sys
 import os
 import subprocess
-import conf
 
 # This script takes one or more input files containing mappings in SAM,
 # BAM, or ELAND format. The files are converted to ELAND format, filtered
@@ -15,9 +14,6 @@ import conf
 # compatibility with the existing pipeline scripts.
 
 from eland import ElandExtendedFile, ElandMultiFile, ElandFile, BwaSamFile, BowtieSamFile, ElandSamFile, IlluminaSamFile
-
-TMP_DIR = conf.GLOBAL_TMP_DIR
-SAMTOOLS_BIN = conf.SAMTOOLS_BINARY
 
 def convert_bwasam(eland_output, sam_input, mismatches):
 	'''Converts SAM file from BWA to Eland, filters out all but unique reads with no more than the specified number of mismatches'''
@@ -33,7 +29,7 @@ def convert_bwasam(eland_output, sam_input, mismatches):
 			eland_output.write(line.convert_to_eland())
 	print "bwasam: total lines", i, "total passed", total_passed
 	input.close()
-	
+
 def convert_bowtiesam(eland_output, sam_input, mismatches):
 	'''Converts SAM file from Bowtie to Eland, filters out all but unique reads with no more than the specified number of mismatches.'''
 	input = BowtieSamFile(sam_input, 'r')
@@ -48,7 +44,7 @@ def convert_bowtiesam(eland_output, sam_input, mismatches):
 			eland_output.write(line.convert_to_eland())
 	print "bowtiesam: total lines", i, "total passed", total_passed
 	input.close()
-	
+
 def convert_illuminasam(eland_output, sam_input, mismatches):
 	'''Converts SAM file from Bowtie to Eland, filters out reads with no more than the specified number of mismatches. NOTE: Due to limitations of Illumina format, does not filter out unique reads. Assumes prefiltered.'''
 	input = IlluminaSamFile(sam_input, 'r')
@@ -62,7 +58,7 @@ def convert_illuminasam(eland_output, sam_input, mismatches):
 	print "illuminasam: total lines", i, "total passed", total_passed
 	input.close()
 	eland_output.close()
-	
+
 def convert_elandsam(eland_output, sam_input, mismatches):
 	input = ElandSamFile(sam_input, 'r')
 	total_passed = 0
@@ -76,7 +72,7 @@ def convert_elandsam(eland_output, sam_input, mismatches):
 			eland_output.write(line.convert_to_eland())
 	print "elandsam: total lines", i, "total passed", total_passed
 	input.close()
-		
+
 def convert_sam(eland_output, sam_input, mismatches):
 	'''Determines SAM format and converts to eland'''
 	input = open(sam_input, 'r')
@@ -105,7 +101,7 @@ def convert_sam(eland_output, sam_input, mismatches):
 				convert_illuminasam(eland_output, sam_input, mismatches)
 				return
 		line = input.readline()
-	
+
 	# If no proper headers, try to guess appropriate SAM format
 	fields = line.split('\t')
 	for f in fields[11:]:
@@ -122,14 +118,15 @@ def convert_sam(eland_output, sam_input, mismatches):
 		raise Exception("Cannot convert regular SAM file")
 	else:
 		convert_bowtiesam(eland_output, sam_input, mismatches)
-		
+
 def convert_bam(eland_output, bam_input, mismatches):
-	sam_input = os.path.join(TMP_DIR, os.path.basename(bam_input)[:-4] + '.sam')
-	bam2sam_cmd = SAMTOOLS_BIN + ' view -h %s > %s' % (bam_input, sam_input)
+        # Figure out how to put this in a uniquely-named temp file
+	sam_input = os.path.basename(bam_input) + '.sam'
+	bam2sam_cmd = 'samtools view -h %s > %s' % (bam_input, sam_input)
 	subprocess.call(bam2sam_cmd, shell=True)
 	convert_sam(eland_output, sam_input, mismatches)
 	os.remove(sam_input)
-			
+
 def merge_unique_eland(output, mapped_reads_files, mismatches=2):
 	eland_out = ElandFile(output, 'w')
 	for i in mapped_reads_files:
@@ -162,7 +159,7 @@ def merge_unique_eland(output, mapped_reads_files, mismatches=2):
 		print "unique eland: total lines", i, "total passed", total_passed
 		eland_in.close()
 	eland_out.close()
-	
+
 if __name__ == '__main__':
 	if len(sys.argv) < 3:
 		print "Usage: merge_and_filter_reads.py output_file reads_file [reads_file ...]"
