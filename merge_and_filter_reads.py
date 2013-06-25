@@ -133,16 +133,21 @@ def merge_unique_eland(output, mapped_reads_files, mismatches=2):
 		if not os.path.exists(i):
 			raise Exception("File %s does not exist" % i)
 		if i.endswith('.bam'):
+                        print "Parsing file as BAM..."
 			convert_bam(eland_out, i, mismatches)
 			continue
 		if i.endswith('.sam'):
+                        print "Parsing file as SAM..."
 			convert_sam(eland_out, i, mismatches)
 			continue
 		if 'multi' in i:
+                        print "Parsing file as ELAND multi..."
 			eland_in = ElandMultiFile(i, 'r')
 		elif 'extended' in i:
+                        print "Parsing file as ELAND extended..."
 			eland_in = ElandExtendedFile(i, 'r')
 		else:
+                        print "Parsing file as plain ELAND..."
 			eland_in = ElandFile(i, 'r')
 		total_passed = 0
 		for i, line in enumerate(eland_in):
