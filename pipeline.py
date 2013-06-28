@@ -257,7 +257,8 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 	jobs.append(peakcaller.cleanup(sample, control))
 	
 	if SNAP_RUN and sample_conf:
-		snap_job = sjm.Job("SNAP", "bash /srv/gs1/apps/snap_support/production/current/peakseq_report_parser_wrapper.sh production %s >& ~alwon/peakseq_report_out " % sample_conf.path,
+		snap_job = sjm.Job("SNAP",
+                                   "bash /srv/gs1/apps/snap_support/production/current/peakseq_report_parser_wrapper.sh production %s >& ~alwon/peakseq_report_out " % sample_conf.path,
                                    queue=QUEUE, project=PROJECT, host='localhost', dependencies=sample.all_jobs())
 		jobs.append(snap_job)
 				
@@ -275,7 +276,9 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 		submission.run(run_name + '.jobs')
 
 if __name__ == '__main__':
-	options, arguments = getopt.gnu_getopt(sys.argv[1:], 'fdaphl:n:m:c:', ['force', 'no_duplicates', 'no_archive', 'print', 'help', 'log', 'mail', 'peakcaller', 'snap', 'filtchr=', 'rmdups',])
+	options, arguments = getopt.gnu_getopt(sys.argv[1:],
+                                               'fdaphl:n:m:c:',
+                                               ['force', 'no_duplicates', 'no_archive', 'print', 'help', 'log', 'mail', 'peakcaller', 'snap', 'filtchr=', 'rmdups',])
 	force = False
 	print_cmds = False
 	log_dir = None

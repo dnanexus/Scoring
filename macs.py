@@ -99,11 +99,13 @@ def form_replicate_files(rep, sample, rmdups=False):
 	if not os.path.exists(rep.pr1_results_dir):
 		os.makedirs(rep.pr1_results_dir)
 	rep.pr1_merged = os.path.join(rep.temp_dir(sample), rep.pr1_name + '_merged_eland.txt')
+
 	rep.pr2_name = rep.rep_name(sample) + '_PR2'
 	rep.pr2_results_dir = os.path.join(sample.results_dir, rep.pr2_name)
 	if not os.path.exists(rep.pr2_results_dir):
 		os.makedirs(rep.pr2_results_dir)
 	rep.pr2_merged = os.path.join(rep.temp_dir(sample), rep.pr2_name + '_merged_eland.txt')
+
 	cmd = os.path.join(BIN_DIR, 'shuffle_mapped_reads.py')
 	cmd += ' %s %s %s' % (rep.merged_file_location, rep.pr1_merged, rep.pr2_merged)
 	cmds.append(cmd)
