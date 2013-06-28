@@ -66,7 +66,6 @@ def convert_illuminasam(eland_output, sam_input, mismatches):
 			eland_output.write(line.convert_to_eland())
 	print "illuminasam: total lines", i, "total passed", total_passed
 	input.close()
-	eland_output.close()
 
 def convert_elandsam(eland_output, sam_input, mismatches):
 	input = ElandSamFile(sam_input, 'r')
