@@ -447,7 +447,8 @@ class IlluminaSamParser:
 		fields = line.rstrip('\n').split('\t')
 		flag = int(fields[1])
 		if flag & 0x4 == 0x4:
-			raise Exception("No reported alignments for read.")
+			#raise Exception("No reported alignments for read.")
+                        return None
 		if flag & 0x10 == 0x10:
 			strand = '-'
 		else:
