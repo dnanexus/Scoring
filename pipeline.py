@@ -208,7 +208,8 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 	
 	sample = None
 	if sample_conf:
-		sample = Sample(sample_conf.RUN_NAME, sample_conf.RESULTS_DIR, sample_conf.TEMP_DIR, sample_conf.GENOME, [SampleReplicate(i+1, x) for i, x in enumerate(sample_conf.REPLICATES)], sample_conf)
+		sample = Sample(sample_conf.RUN_NAME, sample_conf.RESULTS_DIR, sample_conf.TEMP_DIR, sample_conf.GENOME,
+                                [SampleReplicate(i+1, x) for i, x in enumerate(sample_conf.REPLICATES)], sample_conf)
 		peakcaller.check_sample_inputs(sample)
 		if remove_duplicates:
 			peakcaller.form_sample_files_nodups('form_sample_files', sample)
@@ -256,7 +257,8 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 	jobs.append(peakcaller.cleanup(sample, control))
 	
 	if SNAP_RUN and sample_conf:
-		snap_job = sjm.Job("SNAP", "bash /srv/gs1/apps/snap_support/production/current/peakseq_report_parser_wrapper.sh production %s >& ~alwon/peakseq_report_out " % sample_conf.path,  queue=QUEUE, project=PROJECT, host='localhost', dependencies=sample.all_jobs())
+		snap_job = sjm.Job("SNAP", "bash /srv/gs1/apps/snap_support/production/current/peakseq_report_parser_wrapper.sh production %s >& ~alwon/peakseq_report_out " % sample_conf.path,
+                                   queue=QUEUE, project=PROJECT, host='localhost', dependencies=sample.all_jobs())
 		jobs.append(snap_job)
 				
 	if control.jobs:
