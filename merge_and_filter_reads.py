@@ -57,7 +57,9 @@ def convert_illuminasam(eland_output, sam_input, mismatches):
 	input = IlluminaSamFile(sam_input, 'r')
 	total_passed = 0
 	for i, line in enumerate(input):
-		if line.mismatching_positions > mismatches:
+                if line == None:
+                        continue
+		elif line.mismatching_positions > mismatches:
 			continue
 		else:
 			total_passed += 1
