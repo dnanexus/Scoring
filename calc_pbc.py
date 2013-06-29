@@ -14,6 +14,10 @@
 #
 # This code assumes the mappings file has already been filtered for only
 # uniquely mappable reads.
+#
+# The input is a file containing mappings in either SAM or ELAND format.
+# ELAND format is detected by the input filename ending in '_eland.txt'. If
+# this suffix is not present, SAM format is assumed.
 
 import sys
 
