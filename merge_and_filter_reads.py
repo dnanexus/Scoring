@@ -120,19 +120,27 @@ def convert_sam(eland_output, sam_input, mismatches):
         print "No program name found; guessing SAM format from tags..."
 
 	# If no proper headers, try to guess appropriate SAM format
+        found_x0_tag = False
+        found_nm_tag = False
 	fields = line.split('\t')
 	for f in fields[11:]:
-		if f.startswith('X0'):
-                        print "Found X0 tag; guessing BWA SAM"
-			input.close()
-			convert_bwasam(eland_output, sam_input, mismatches)
-			return
-		if f.startswith('NM'):
-                        print "Found NM tag; guessing ELAND SAM"
-			input.close()
-			convert_elandsam(eland_output, sam_input, mismatches)
-			return
+                if f.startswith('X0'):
+                        found_x0_tag = True
+                if f.startswith('NM'):
+                        found_nm_tag = True
+        if found_x0_tag:
+                print "Found X0 tag; guessing BWA SAM"
+                input.close()
+                convert_bwasam(eland_output, sam_input, mismatches)
+                return
+        if found_nm_tag:
+                print "Found NM tag; guessing ELAND SAM"
+                input.close()
+                convert_elandsam(eland_output, sam_input, mismatches)
+                return
+
 	input.close()
+
 	if len(fields) == 11:  # No Custom flags
 		raise Exception("Cannot convert regular SAM file")
 	else:
