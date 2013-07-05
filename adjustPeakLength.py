@@ -8,7 +8,7 @@
 # also Anshul's crazy adjustments.
 
 import sys
-import subprocess
+# import subprocess
 
 def main(narrowpeak_input, narrowpeak_output):
     # narrowpeak_input_sorted = narrowpeak_input + '.sorted'
@@ -20,16 +20,16 @@ def main(narrowpeak_input, narrowpeak_output):
 
     for i, line in enumerate(np_in):
         fields = line.rstrip('\n').split('\t')
-        chromStart = int(fields[1])
-        chromEnd = int(fields[2])
+        chrom_start = int(fields[1])
+        chrom_end = int(fields[2])
         peak = int(fields[9])
-        if chromEnd - chromStart > 1000:
-            peak_point = chromStart + peak
-            chromStart = max(chromStart, peak_point - 500)
-            chromEnd = min(chromEnd, peak_point + 500)
-            peak = peak_point - chromStart
-        fields[1] = str(chromStart)
-        fields[2] = str(chromEnd)
+        if chrom_end - chrom_start > 1000:
+            peak_point = chrom_start + peak
+            chrom_start = max(chrom_start, peak_point - 500)
+            chrom_end = min(chrom_end, peak_point + 500)
+            peak = peak_point - chrom_start
+        fields[1] = str(chrom_start)
+        fields[2] = str(chrom_end)
         fields[9] = str(peak)
         # fields[6] = str(range(1, total_hits + 1)[-i-1])
         np_out.write('\t'.join(fields) + '\n')
