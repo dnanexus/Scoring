@@ -154,7 +154,7 @@ def archive_sample(name, sample, control):
 	
 	sample.add_jobs(name, [archive_results(sample.run_name, sample.results_dir, sample.archive_file),])
 
-def calc_pbc(name, control, sample):
+def calc_pbc(name, sample):
 	pbc_stats_file = os.path.join(sample.results_dir, 'pbc_stats.txt')
 	cmds = []
 	for r in sample.replicates:

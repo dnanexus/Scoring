@@ -215,7 +215,7 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 			peakcaller.form_sample_files_nodups('form_sample_files', sample)
 		else:
 			peakcaller.form_sample_files('form_sample_files', sample)
-		peakcaller.calc_pbc('calc_pbc', control, sample)
+		peakcaller.calc_pbc('calc_pbc', sample)
 		peakcaller.run_peakcaller('peakcaller', control, sample, peakcaller_options)
 		add_dependencies(sample.jobs['form_sample_files'], sample.jobs['calc_pbc'])
 		add_dependencies(sample.jobs['form_sample_files'], sample.jobs['peakcaller'])
