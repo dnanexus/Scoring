@@ -105,7 +105,7 @@ def convert_sam(eland_output, sam_input, mismatches):
 				input.close()
 				convert_bwasam(eland_output, sam_input, mismatches)
 				return
-			elif program_name == 'bowtie':
+			elif program_name == 'bowtie' or program_name == 'bowtie2':
                                 print "Program name is bowtie"
 				input.close()
 				convert_bowtiesam(eland_output, sam_input, mismatches)
