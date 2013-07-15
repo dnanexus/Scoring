@@ -59,19 +59,19 @@ def prep_sample(sample):
 def form_control_files(name, control):
 	cmds = []
 	control.merged_file_location = os.path.join(control.temp_dir, '%s_merged_eland.txt' % control.run_name)
-	
+
 	# Merge eland files
 	cmd = os.path.join(BIN_DIR, 'merge_and_filter_reads.py')
 	cmd += ' %s' % control.merged_file_location
 	for mr in control.mapped_read_files:
 		cmd += ' %s' % mr
 	cmds.append(cmd)
-	
+
 	# Divide merged file by chr
 	cmd = os.path.join(BIN_DIR, 'divide_eland.py')
 	cmd += " %s %s %s" % (control.merged_file_location, control.genome, control.results_dir)
 	cmds.append(cmd)
-	
+
 	# Create Signal Map
 	cmd = os.path.join(BIN_DIR, 'create_signal_map.py')
 	cmd += ' %s %s' % (control.sgr_dir, control.results_dir)
@@ -105,7 +105,7 @@ def form_replicate_files(rep, sample):
 	cmd = os.path.join(BIN_DIR, 'divide_eland.py')
 	cmd += ' %s %s %s' % (rep.merged_file_location, sample.genome, rep.temp_dir(sample))
 	cmds.append(cmd)
-	
+
 	# Make Pseudoreplicates
 	rep.pr1_name = rep.rep_name(sample) + '_PR1'
 	rep.pr1_results_dir = os.path.join(sample.results_dir, rep.pr1_name)
@@ -151,7 +151,7 @@ def archive_sample(name, sample, control):
 	f.write('sample_tar_complete=%s\n' % sample.archive_file)
 	f.write('control_tar_complete=%s\n' % control.archive_file)
 	f.close()
-	
+
 	sample.add_jobs(name, [archive_results(sample.run_name, sample.results_dir, sample.archive_file),])
 
 def calc_pbc(name, sample):
@@ -183,7 +183,7 @@ def run_peakcaller(name, control, sample, options=None):
 				mappability_file,)
 			cmd = os.path.join(BIN_DIR, 'peakseq_wrapper.py') + ' ' + cmd
 			sample.add_jobs(name, [sjm.Job(r.rep_name(sample) + '_%s' % chr, [cmd,], queue=QUEUE, project=PROJECT),])
-			
+
 			# Pseudoreplicate Runs
 			input = os.path.join(r.temp_dir(sample), '%s_eland.txt' % chr)
 			cmd = PEAKSEQ_BINARY + " %s %s %s %s %s %s" % (
@@ -195,7 +195,7 @@ def run_peakcaller(name, control, sample, options=None):
 				mappability_file,)
 			cmd = os.path.join(BIN_DIR, 'peakseq_wrapper.py') + ' ' + cmd
 			sample.add_jobs(name, [sjm.Job(r.rep_name(sample) + '_PR1_%s' % chr, [cmd,], queue=QUEUE, project=PROJECT),])
-			
+
 			input = os.path.join(r.temp_dir(sample), '%s_eland.txt' % chr)
 			cmd = PEAKSEQ_BINARY + " %s %s %s %s %s %s" % (
 				os.path.join(r.temp_dir(sample), '%s_eland.txt' % chr), #input
@@ -217,7 +217,7 @@ def merge_results(name, sample):
 				r.unfiltered_results = output
 			cmd = filter_hits_cmd(r.results_dir(sample), r.sgr_dir(sample), sample.genome, output, q_val)
 			sample.add_jobs(name, [sjm.Job('merge_' + r.rep_name(sample) + '%g' % (q_val), [cmd,], queue=QUEUE, project=PROJECT),])
-	
+
 		# Merge Pseudoreplicate Hits
 		output = os.path.join(r.results_dir(sample), '%s_hits.bed' % (r.rep_name(sample) + '_PR1'))
 		r.unfiltered_results_pr1 = output
@@ -245,7 +245,7 @@ def replicate_scoring(name, sample):
 	cmd += ' %s' % os.path.join(sample.results_dir, 'rep_stats')
 	cmd += ' ' + sample.conf.path
 	cmds.append(cmd)
-	
+
 	# Replicate Overlap Statistics
 	for q in sample.conf.Q_VALUE_THRESHOLDS:
 		for r1 in sample.replicates:
@@ -259,7 +259,7 @@ def replicate_scoring(name, sample):
 				cmd += ' %f' % q
 				cmd += ' %s_VS_%s_%f' % (r1.rep_name(sample), r2.rep_name(sample), q)
 				cmds.append(cmd)
-				
+
 	j = sjm.Job('replicate_stats', cmds, queue=QUEUE, project=PROJECT)
 	sample.add_jobs(name, [j,])
 
@@ -271,18 +271,18 @@ def form_idr_inputs(name, sample):
 		cmd = os.path.join(SUBMISSION_BIN_DIR, 'normalhits2narrowPeak')
 		cmd += ' %s > %s' % (rep.unfiltered_results, rep.narrowPeak)
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_hits2narrowPeak', [cmd,], queue=QUEUE, project=PROJECT))
-		
+
 		# Pseudoreplicates
 		rep.narrowPeak_pr1 = os.path.join(rep.results_dir(sample), rep.rep_name(sample) + '_PR1_unfiltered_narrowPeak.bed')
 		cmd = os.path.join(SUBMISSION_BIN_DIR, 'normalhits2narrowPeak')
 		cmd += ' %s > %s' % (rep.unfiltered_results_pr1, rep.narrowPeak_pr1)
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_PR1_hits2narrowPeak', [cmd,], queue=QUEUE, project=PROJECT))
-		
+
 		rep.narrowPeak_pr2 = os.path.join(rep.results_dir(sample), rep.rep_name(sample) + '_PR2_unfiltered_narrowPeak.bed')
 		cmd = os.path.join(SUBMISSION_BIN_DIR, 'normalhits2narrowPeak')
 		cmd += ' %s > %s' % (rep.unfiltered_results_pr2, rep.narrowPeak_pr2)
 		jobs.append(sjm.Job(rep.rep_name(sample) + '_PR2_hits2narrowPeak', [cmd,], queue=QUEUE, project=PROJECT))
-	
+
 	sample.add_jobs(name, jobs)
 
 def mail_results(sample, control, run_name, emails):
@@ -296,14 +296,14 @@ def mail_results(sample, control, run_name, emails):
 	cmd += ' %s' % os.path.join(sample.results_dir, 'idr_results.txt')
 	cmd += ' %s' % os.path.join(sample.results_dir, 'full_report.txt')
 	cmds.append(cmd)
-	
+
 	cmd = os.path.join(BIN_DIR, 'mail_wrapper.py')
 	cmd += ' "%s Scoring Results"' % sample.run_name
 	cmd += ' %s' % os.path.join(sample.results_dir, 'full_report.txt')
 	for email in emails:
 		cmd += ' %s' % email
 	cmds.append(cmd)
-	
+
 	return sjm.Job('mail_results', cmds, queue=QUEUE, project=PROJECT, host='localhost', dependencies=sample.all_jobs() + control.all_jobs())
 
 def cleanup(sample, control):
@@ -330,17 +330,17 @@ def idr_analysis(name, sample):
 			idr_name = '%s_VS_%s' % (rep_a.rep_name(sample), rep_b.rep_name(sample))
 			cmd = idr.idr_analysis_cmd(rep_a.narrowPeak, rep_b.narrowPeak, os.path.join(sample.idr_dir, idr_name), 'q.value', sample.genome)
 			jobs.append(sjm.Job('idr_analysis_' + idr_name, [cmd,], queue=QUEUE, project=PROJECT))
-			
+
 		# Pseudoreplicates
 		idr_name = '%s_PR1_VS_%s_PR2' % (rep_a.rep_name(sample), rep_a.rep_name(sample))
 		cmd = idr.idr_analysis_cmd(rep_a.narrowPeak_pr1, rep_a.narrowPeak_pr2, os.path.join(sample.idr_dir, idr_name+'_PR'), 'q.value', sample.genome)
 		jobs.append(sjm.Job('idr_analysis_' + idr_name, [cmd,], queue=QUEUE, project=PROJECT))
-		
+
 	# Pooled Pseudoreplicates
 	idr_name = '%s_PR1_VS_%s_PR2' % (sample.combined_replicate.rep_name(sample), sample.combined_replicate.rep_name(sample))
 	cmd = idr.idr_analysis_cmd(sample.combined_replicate.narrowPeak_pr1, sample.combined_replicate.narrowPeak_pr2, os.path.join(sample.idr_dir, idr_name), 'q.value', sample.genome)
 	jobs.append(sjm.Job('idr_analysis_'+ idr_name, [cmd,], queue=QUEUE, project=PROJECT))
-	
+
 	sample.add_jobs(name, jobs)
 
 def idr_filter(name, sample):
