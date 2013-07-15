@@ -21,6 +21,7 @@ def main(hits_file1, hits_file2, stats_file, q_value, percent_of_hits=.4, name=N
 	if not name:
 		name = hits_file1 + '_VS_' + hits_file2
 
+        print "Reading hits_file1..."
 	hits1 = []
 	if hits_file1.endswith('.regionPeak') or hits_file1.endswith('.narrowPeak') or hits_file1.endswith('.narrowPeak.bed') or hits_file1.endswith('.regionPeak.bed'):
 		bed_parser = NarrowPeakBEDParser()
@@ -32,6 +33,9 @@ def main(hits_file1, hits_file2, stats_file, q_value, percent_of_hits=.4, name=N
 			continue
 		hits1.append(h)
 
+        print "Read %s hits." % len(hits1)
+
+        print "Reading hits_file2..."
 	if hits_file2.endswith('.regionPeak') or hits_file2.endswith('.narrowPeak') or hits_file2.endswith('.narrowPeak.bed') or hits_file2.endswith('.regionPeak.bed'):
 		bed_parser = NarrowPeakBEDParser()
 	else:
@@ -42,6 +46,8 @@ def main(hits_file1, hits_file2, stats_file, q_value, percent_of_hits=.4, name=N
 		if q_value != -1.0 and h.q_value < q_value:
 			continue
 		hits2.append(h)
+
+        print "Read %s hits." % len(hits2)
 
 	if not hits1:
 		print "Warning: %s has no hits" % hits_file1
@@ -54,14 +60,25 @@ def main(hits_file1, hits_file2, stats_file, q_value, percent_of_hits=.4, name=N
 	total_checked = max(min(int(float(len(hits1) * percent_of_hits)), int(float(len(hits2)) * percent_of_hits)), 1)
 	total_overlap = 0
 
+        print "total_checked: %s" % total_checked
+
+        print "Sorting hits1..."
 	hits1.sort(key=lambda x: x.p_value)
+        print "Reversing hits1..."
 	hits1.reverse()
 
+        i = 0
+
 	for h1 in hits1[:total_checked]:
+                i += 1
+                checked = 0
 		for h2 in hits2:
+                        checked += 1
 			if overlaps(h1, h2):
 				total_overlap += 1
 				break
+                if i % 100 == 0:
+                        print "  %s (checked %s)" % (i, checked)
 
 	print len(hits1), len(hits2), total_checked, total_overlap
 	sf.write('rep_overlap=%s=%f\n' % (name, float(total_overlap) / float(total_checked)))

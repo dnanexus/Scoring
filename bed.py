@@ -62,6 +62,7 @@ class NarrowPeakBEDParser:
 	def parse(self, line):
 		fields = line.rstrip('\n').split('\t')
 		if len(fields) != 10:
+                        print "line: %s" % line
 			raise Exception("Incorrect number of fields. Found %i, expected 10." % len(fields))
 		return NarrowPeakBED(chr=fields[0], start=fields[1], stop=fields[2],
                                      name=fields[3], score=fields[4], strand=fields[5],
