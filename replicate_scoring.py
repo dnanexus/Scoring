@@ -1,5 +1,9 @@
 #!/bin/env python
 
+# This script does not seem to be used in the pipeline. (It seems to
+# be functionally similar to the replicate_scoring functions in the
+# individual peakcaller modules.
+
 import math
 import sys
 import os
