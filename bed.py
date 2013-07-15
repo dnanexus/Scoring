@@ -11,12 +11,12 @@ class PeakSeqBED:
 		self.p_value = float(p_value)
 		self.q_value = float(q_value)
 		self.localmax = localmax
-		
+
 	def __str__(self):
 		return '\t'.join([self.chr, str(self.start), str(self.stop), self.sample_tags,
                                   self.control_tags, self.enrichment, self.excess,
                                   str(self.localmax), str(self.p_value), str(self.q_value)])
-							
+
 	def __cmp__(self, other):
 		'''Compare on p_value'''
 		return cmp(self.p_value, other.p_value)
@@ -24,7 +24,7 @@ class PeakSeqBED:
 class PeakSeqBEDParser:
 	def __init__(self):
 		pass
-		
+
 	def parse(self, line):
 		fields = line.rstrip('\n').split('\t')
 		if len(fields) == 8:
@@ -51,14 +51,14 @@ class NarrowPeakBED(PeakSeqBED):
 		self.p_value = float(p_value)
 		self.q_value = float(q_value)
 		self.peak = int(peak)
-		
+
 	def __str__(self):
 		return '\t'.join([self.chr, str(self.start), str(self.stop), self.name, str(self.score), self.strand, str(self.signal_value), str(self.p_value), str(self.q_value), str(self.peak),])
 
 class NarrowPeakBEDParser:
 	def __init__(self):
 		pass
-		
+
 	def parse(self, line):
 		fields = line.rstrip('\n').split('\t')
 		if len(fields) != 10:
