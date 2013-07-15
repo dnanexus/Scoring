@@ -230,14 +230,17 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 		# IDR Analysis
 		peakcaller.form_idr_inputs('idr_format_inputs', sample)
 		add_dependencies(sample.jobs['merge_results'], sample.jobs['idr_format_inputs'])
+
 		if len(sample.replicates) > 1:
 			peakcaller.replicate_scoring('replicate_scoring', sample)
 			add_dependencies(sample.jobs['merge_results'], sample.jobs['replicate_scoring'])
 			if archive_results:
 				add_dependencies(sample.jobs['replicate_scoring'], sample.jobs['archive_sample'])
 			add_dependencies(sample.jobs['idr_format_inputs'], sample.jobs['replicate_scoring'])
+
 		peakcaller.idr_analysis('idr_analysis', sample)
 		add_dependencies(sample.jobs['idr_format_inputs'], sample.jobs['idr_analysis'])
+
  		peakcaller.idr_filter('idr_filter', sample)
  		add_dependencies(sample.jobs['idr_analysis'], sample.jobs['idr_filter'])
  		if archive_results:
@@ -254,6 +257,7 @@ def main(peakcaller, run_name, control_conf, sample_conf=None,
 
 	if emails:
 		jobs.append(peakcaller.mail_results(sample, control, run_name, emails))
+
 	jobs.append(peakcaller.cleanup(sample, control))
 	
 	if SNAP_RUN and sample_conf:
