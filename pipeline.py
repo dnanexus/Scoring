@@ -9,11 +9,11 @@ Usage:  pipeline.py [-f] [-p] [-h] [-s] [-a] [-m <email address>] [-l <directory
 
 Arguments:
 	-c, --peakcaller <peakcaller>
-	specify the peakcaller to be used.  Current options are peakseq, macs, 
+	specify the peakcaller to be used. Current options are peakseq, macs, 
 	macs2, spp. Defaults to macs2.
 	
 	-a, --no_archive
-	does not archive the control and sample results.  
+	does not archive the control and sample results.
 	
 	-f, --force
 	forces running of pipeline, even if results already exist
@@ -23,7 +23,7 @@ Arguments:
 	
 	-d, --no_duplicates
 	runs cross correlation analysis assuming duplicated reads have
-	already been filtered out of the mapped reads.  Uncommon, so
+	already been filtered out of the mapped reads. Uncommon, so
 	defaults to false.
 	
 	-h, --help
@@ -42,18 +42,18 @@ Arguments:
 	make a call to the SNAP LIMS after completion
 	
 	--filtchr <chromosome>
-	SPP option to ignore a chromosome during analysis.  Used to fix bug that 
+	SPP option to ignore a chromosome during analysis. Used to fix bug that 
 	chrs with low read counts causes SPP to fail. 
 	
 	--rmdups
-	Filter out all duplicate reads in sample read files before peakcalling.  Use
-	when PCR amplification errors are present.  (i.e., PBC value is low)
+	Filter out all duplicate reads in sample read files before peakcalling. Use
+	when PCR amplification errors are present. (i.e., PBC value is low)
 	
 	<control_config_file>
 	(required) configuration file for the experiment's control
 	
 	<sample_config_file>
-	configuration file for the sample replicates in the experiment.  Optional, 
+	configuration file for the sample replicates in the experiment. Optional, 
 	but in most cases this is specified.
 
 """
@@ -349,7 +349,7 @@ if __name__ == '__main__':
 		import spp_nodups
 		peakcaller_module = spp_nodups
 	else:
-		print "Invalid Peakcaller selected.  Options are 'peakseq', 'macs', 'macs2',  'spp' or 'spp_nodups'"
+		print "Invalid Peakcaller selected. Options are 'peakseq', 'macs', 'macs2',  'spp' or 'spp_nodups'"
 		raise SystemExit(1)	
 	
 	main(peakcaller_module, run_name, control_conf, sample_conf=sample_conf, force=force,
